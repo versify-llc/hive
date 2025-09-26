@@ -28,10 +28,10 @@ class HiveListImpl<E extends HiveObjectMixin>
 
   /// Not part of public API
   HiveListImpl(Box box, {List<E>? objects})
-      : boxName = box.name,
-        _keys = null,
-        _delegate = [],
-        _box = box {
+    : boxName = box.name,
+      _keys = null,
+      _delegate = [],
+      _box = box {
     if (objects != null) {
       addAll(objects);
     }
@@ -58,8 +58,10 @@ class HiveListImpl<E extends HiveObjectMixin>
           'To use this list, you have to open the box "$boxName" first.',
         );
       } else if (box is! Box) {
-        throw HiveError('The box "$boxName" is a lazy box. '
-            'You can only use HiveLists with normal boxes.');
+        throw HiveError(
+          'The box "$boxName" is a lazy box. '
+          'You can only use HiveLists with normal boxes.',
+        );
       } else {
         _box = box;
       }

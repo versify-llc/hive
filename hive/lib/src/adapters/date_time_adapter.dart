@@ -19,7 +19,7 @@ class DateTimeAdapter<T extends DateTime> extends TypeAdapter<T> {
 
 class DateTimeWithoutTZ extends DateTime {
   DateTimeWithoutTZ.fromMillisecondsSinceEpoch(super.millisecondsSinceEpoch)
-      : super.fromMillisecondsSinceEpoch();
+    : super.fromMillisecondsSinceEpoch();
 }
 
 /// Alternative adapter for DateTime with time zone info

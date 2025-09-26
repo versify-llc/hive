@@ -11,10 +11,15 @@ void main() {
   group('BackendManager', () {
     group('findHiveFileAndCleanUp', () {
       Future<void> checkFindHiveFileAndCleanUp(String folder) async {
-        final hiveFileDir =
-            await getAssetDir('findHiveFileAndCleanUp', folder, 'before');
-        final hiveFile = await BackendManager()
-            .findHiveFileAndCleanUp('testBox', hiveFileDir.path);
+        final hiveFileDir = await getAssetDir(
+          'findHiveFileAndCleanUp',
+          folder,
+          'before',
+        );
+        final hiveFile = await BackendManager().findHiveFileAndCleanUp(
+          'testBox',
+          hiveFileDir.path,
+        );
         expect(hiveFile.path, path.join(hiveFileDir.path, 'testBox.hive'));
         await expectDirEqualsAssetDir(
           hiveFileDir,

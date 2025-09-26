@@ -16,8 +16,8 @@ class StorageBackendMemory extends StorageBackend {
 
   /// Not part of public API
   StorageBackendMemory(Uint8List? bytes, this._cipher)
-      : _bytes = bytes,
-        _frameHelper = FrameHelper();
+    : _bytes = bytes,
+      _frameHelper = FrameHelper();
 
   @override
   String? get path => null;

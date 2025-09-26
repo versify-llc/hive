@@ -36,8 +36,10 @@ class ReadWriteSync {
     _readTask = future;
     _writeTask = future;
 
-    return previousReadTask.then((_) {
-      return previousWriteTask.then((_) => task());
-    }).whenComplete(completer.complete);
+    return previousReadTask
+        .then((_) {
+          return previousWriteTask.then((_) => task());
+        })
+        .whenComplete(completer.complete);
   }
 }

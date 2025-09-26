@@ -33,7 +33,7 @@ class BufferedFileReader {
 
   /// Not part of public API
   BufferedFileReader(this.file, [int bufferSize = defaultChunkSize])
-      : buffer = Uint8List(bufferSize);
+    : buffer = Uint8List(bufferSize);
 
   /// Not part of public API
   @pragma('vm:prefer-inline')

@@ -14,10 +14,7 @@ PaddedBlockCipherImpl getCipher() {
   );
   pcCipher.init(
     true,
-    PaddedBlockCipherParameters(
-      ParametersWithIV(KeyParameter(key), iv),
-      null,
-    ),
+    PaddedBlockCipherParameters(ParametersWithIV(KeyParameter(key), iv), null),
   );
   return pcCipher;
 }
@@ -42,8 +39,14 @@ void main() {
       for (var i = 1; i < 1000; i++) {
         final input = message.view(0, i);
         final encrypted = getCipher().process(input);
-        final outLen =
-            cipher.decrypt(iv, encrypted, 0, encrypted.length, out, 0);
+        final outLen = cipher.decrypt(
+          iv,
+          encrypted,
+          0,
+          encrypted.length,
+          out,
+          0,
+        );
         expect(out.view(0, outLen), input);
       }
     });

@@ -32,11 +32,7 @@ void main() {
   group('BoxImpl', () {
     test('.values', () {
       final keystore = Keystore.debug(
-        frames: [
-          Frame(0, 123),
-          Frame('key1', 'value1'),
-          Frame(1, null),
-        ],
+        frames: [Frame(0, 123), Frame('key1', 'value1'), Frame(1, null)],
       );
       final box = _getBox(keystore: keystore);
 
@@ -45,12 +41,7 @@ void main() {
 
     test('.valuesBetween()', () {
       final keystore = Keystore.debug(
-        frames: [
-          Frame(0, 0),
-          Frame(1, 1),
-          Frame('0', 2),
-          Frame('1', 3),
-        ],
+        frames: [Frame(0, 0), Frame(1, 1), Frame('0', 2), Frame('1', 3)],
       );
       final box = _getBox(keystore: keystore);
 
@@ -72,10 +63,7 @@ void main() {
         final box = _getBox(
           backend: backend,
           keystore: Keystore.debug(
-            frames: [
-              Frame('testKey', 'testVal'),
-              Frame(123, 456),
-            ],
+            frames: [Frame('testKey', 'testVal'), Frame(123, 456)],
           ),
         );
 
@@ -86,8 +74,9 @@ void main() {
     });
 
     test('.getAt() returns value at given index', () {
-      final keystore =
-          Keystore.debug(frames: [Frame(0, 'zero'), Frame('a', 'A')]);
+      final keystore = Keystore.debug(
+        frames: [Frame(0, 'zero'), Frame('a', 'A')],
+      );
       final box = _getBox(keystore: keystore);
 
       expect(box.getAt(0), 'zero');
@@ -212,11 +201,7 @@ void main() {
     test('.toMap()', () {
       final box = _getBox(
         keystore: Keystore.debug(
-          frames: [
-            Frame('key1', 1),
-            Frame('key2', 2),
-            Frame('key4', 444),
-          ],
+          frames: [Frame('key1', 1), Frame('key2', 2), Frame('key4', 444)],
         ),
       );
       expect(box.toMap(), {'key1': 1, 'key2': 2, 'key4': 444});

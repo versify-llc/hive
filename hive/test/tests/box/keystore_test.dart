@@ -93,10 +93,7 @@ void main() {
     group('.get()', () {
       test('returns the frame of the given key', () {
         final keystore = Keystore.debug(
-          frames: [
-            Frame('key1', 'value1'),
-            Frame(1, 'value2'),
-          ],
+          frames: [Frame('key1', 'value1'), Frame(1, 'value2')],
         );
 
         expect(keystore.get('key1'), Frame('key1', 'value1'));
@@ -113,10 +110,7 @@ void main() {
     group('.getAt()', () {
       test('returns the frame at the given index', () {
         final keystore = Keystore.debug(
-          frames: [
-            Frame('key1', 'value1'),
-            Frame(4, 'value2'),
-          ],
+          frames: [Frame('key1', 'value1'), Frame(4, 'value2')],
         );
 
         expect(keystore.getAt(0), Frame(4, 'value2'));
@@ -145,12 +139,7 @@ void main() {
 
     test('.getValues() returns the values in the order of their keys', () {
       final keystore = Keystore.debug(
-        frames: [
-          Frame('key1', 4),
-          Frame(2, 2),
-          Frame(0, null),
-          Frame('0', 3),
-        ],
+        frames: [Frame('key1', 4), Frame(2, 2), Frame(0, null), Frame('0', 3)],
       );
 
       expect(keystore.getValues(), [null, 2, 3, 4]);
@@ -158,13 +147,8 @@ void main() {
 
     group('.getValuesBetween()', () {
       Keystore keystore() => Keystore.debug(
-            frames: [
-              Frame('key1', 4),
-              Frame(2, 2),
-              Frame(0, null),
-              Frame('0', 3),
-            ],
-          );
+        frames: [Frame('key1', 4), Frame(2, 2), Frame(0, null), Frame('0', 3)],
+      );
 
       test('startKey and endKey specified', () {
         expect(keystore().getValuesBetween(2, '0'), [2, 3]);
@@ -212,10 +196,10 @@ void main() {
           keystore.insert(Frame('key2', 'val2'));
           keystore.insert(Frame('key1', 'val1'));
 
-          expect(
-            keystore.frames,
-            [Frame('key1', 'val1'), Frame('key2', 'val2')],
-          );
+          expect(keystore.frames, [
+            Frame('key1', 'val1'),
+            Frame('key2', 'val2'),
+          ]);
         });
 
         test('returns overridden Frame', () {
@@ -276,10 +260,7 @@ void main() {
       group('delete', () {
         test('deletes frame from store', () {
           final keystore = Keystore.debug(
-            frames: [
-              Frame('key2', 'val2'),
-              Frame('key1', 'val1'),
-            ],
+            frames: [Frame('key2', 'val2'), Frame('key1', 'val1')],
           );
 
           keystore.insert(Frame.deleted('key2'));
@@ -297,8 +278,10 @@ void main() {
         test('unloads deleted HiveObject', () {
           final box = MockBox();
           final hiveObject = TestHiveObject();
-          final keystore =
-              Keystore.debug(frames: [Frame('key', hiveObject)], box: box);
+          final keystore = Keystore.debug(
+            frames: [Frame('key', hiveObject)],
+            box: box,
+          );
 
           keystore.insert(Frame.deleted('key'));
           expect(hiveObject.key, null);
@@ -388,10 +371,7 @@ void main() {
       test('deleting frames', () {
         final notifier = MockChangeNotifier();
         final keystore = Keystore.debug(
-          frames: [
-            Frame('key1', 'val1'),
-            Frame('key2', 'val2'),
-          ],
+          frames: [Frame('key1', 'val1'), Frame('key2', 'val2')],
           notifier: notifier,
         );
         reset(notifier);
@@ -441,10 +421,9 @@ void main() {
 
         keystore.cancelTransaction();
         expect(keystore.frames, [Frame('otherKey', 'otherVal')]);
-        expectTrx(
-          keystore.transactions,
-          [KeyTransaction()..added.add('otherKey')],
-        );
+        expectTrx(keystore.transactions, [
+          KeyTransaction()..added.add('otherKey'),
+        ]);
         verify(() => notifier.notify(Frame.deleted('key')));
       });
 
@@ -469,9 +448,7 @@ void main() {
           Frame('otherKey', 'otherVal'),
           Frame.deleted('key'),
         ]);
-        keystore.beginTransaction([
-          Frame('key', 'val2'),
-        ]);
+        keystore.beginTransaction([Frame('key', 'val2')]);
         reset(notifier);
 
         keystore.cancelTransaction();
@@ -575,10 +552,7 @@ void main() {
     group('.clear()', () {
       test('clears store', () {
         final keystore = Keystore.debug(
-          frames: [
-            Frame('key1', 'val1'),
-            Frame('key2', 'val2'),
-          ],
+          frames: [Frame('key1', 'val1'), Frame('key2', 'val2')],
         );
         keystore.clear();
         expect(keystore.frames, []);
@@ -588,10 +562,7 @@ void main() {
         final hiveObject = TestHiveObject();
         final box = MockBox();
         final keystore = Keystore.debug(
-          frames: [
-            Frame('key1', 'val1'),
-            Frame('key2', hiveObject),
-          ],
+          frames: [Frame('key1', 'val1'), Frame('key2', hiveObject)],
           box: box,
         );
         expect(hiveObject.key, 'key2');
@@ -604,10 +575,7 @@ void main() {
 
       test('resets deleted entries', () {
         final keystore = Keystore.debug(
-          frames: [
-            Frame('key1', 'val1'),
-            Frame('key2', 'val2'),
-          ],
+          frames: [Frame('key1', 'val1'), Frame('key2', 'val2')],
         );
 
         keystore.insert(Frame.deleted('key1'));

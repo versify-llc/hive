@@ -34,10 +34,7 @@ void main() {
         when(binaryReader.readBool).thenReturn(false);
 
         final date = DateTimeWithTimezoneAdapter().read(binaryReader);
-        verifyInOrder([
-          binaryReader.readInt,
-          binaryReader.readBool,
-        ]);
+        verifyInOrder([binaryReader.readInt, binaryReader.readBool]);
         expect(date, now.subtract(Duration(microseconds: now.microsecond)));
       });
 
@@ -48,10 +45,7 @@ void main() {
         when(binaryReader.readBool).thenReturn(true);
 
         final date = DateTimeWithTimezoneAdapter().read(binaryReader);
-        verifyInOrder([
-          binaryReader.readInt,
-          binaryReader.readBool,
-        ]);
+        verifyInOrder([binaryReader.readInt, binaryReader.readBool]);
         expect(date, now.subtract(Duration(microseconds: now.microsecond)));
         expect(date.isUtc, true);
       });

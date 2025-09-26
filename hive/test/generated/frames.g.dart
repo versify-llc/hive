@@ -1,13 +1,13 @@
 import 'dart:typed_data';
 
 final frameBytes = [
-// 0
+  // 0
   Uint8List.fromList([13, 0, 0, 0, 0, 0, 0, 0, 0, 249, 243, 70, 23]),
-// 555
+  // 555
   Uint8List.fromList([13, 0, 0, 0, 0, 43, 2, 0, 0, 168, 15, 241, 99]),
-// 123
+  // 123
   Uint8List.fromList([14, 0, 0, 0, 0, 123, 0, 0, 0, 0, 27, 137, 65, 115]),
-// 0
+  // 0
   Uint8List.fromList([
     26,
     0,
@@ -36,7 +36,7 @@ final frameBytes = [
     73,
     225,
   ]),
-// 1
+  // 1
   Uint8List.fromList([
     26,
     0,
@@ -65,7 +65,7 @@ final frameBytes = [
     230,
     255,
   ]),
-// 29
+  // 29
   Uint8List.fromList([
     26,
     0,
@@ -94,7 +94,7 @@ final frameBytes = [
     168,
     10,
   ]),
-// Tombstone frame
+  // Tombstone frame
   Uint8List.fromList([
     25,
     0,
@@ -122,7 +122,7 @@ final frameBytes = [
     191,
     153,
   ]),
-// Null frame
+  // Null frame
   Uint8List.fromList([
     21,
     0,
@@ -146,7 +146,7 @@ final frameBytes = [
     225,
     253,
   ]),
-// Int
+  // Int
   Uint8List.fromList([
     22,
     0,
@@ -171,7 +171,7 @@ final frameBytes = [
     117,
     171,
   ]),
-// Large int
+  // Large int
   Uint8List.fromList([
     28,
     0,
@@ -202,7 +202,7 @@ final frameBytes = [
     117,
     116,
   ]),
-// Bool true
+  // Bool true
   Uint8List.fromList([
     21,
     0,
@@ -226,7 +226,7 @@ final frameBytes = [
     178,
     82,
   ]),
-// Bool false
+  // Bool false
   Uint8List.fromList([
     22,
     0,
@@ -251,7 +251,7 @@ final frameBytes = [
     154,
     247,
   ]),
-// Float
+  // Float
   Uint8List.fromList([
     24,
     0,
@@ -278,7 +278,7 @@ final frameBytes = [
     33,
     185,
   ]),
-// Unicode string
+  // Unicode string
   Uint8List.fromList([
     109,
     0,
@@ -390,7 +390,7 @@ final frameBytes = [
     86,
     178,
   ]),
-// Empty list
+  // Empty list
   Uint8List.fromList([
     25,
     0,
@@ -418,7 +418,7 @@ final frameBytes = [
     124,
     36,
   ]),
-// Byte list
+  // Byte list
   Uint8List.fromList([
     28,
     0,
@@ -449,7 +449,7 @@ final frameBytes = [
     233,
     179,
   ]),
-// Byte list with mask
+  // Byte list with mask
   Uint8List.fromList([
     39,
     0,
@@ -491,7 +491,7 @@ final frameBytes = [
     39,
     158,
   ]),
-// Int list
+  // Int list
   Uint8List.fromList([
     47,
     0,
@@ -541,7 +541,7 @@ final frameBytes = [
     43,
     173,
   ]),
-// Bool list
+  // Bool list
   Uint8List.fromList([
     28,
     0,
@@ -572,7 +572,7 @@ final frameBytes = [
     70,
     226,
   ]),
-// Double list
+  // Double list
   Uint8List.fromList([
     66,
     0,
@@ -641,7 +641,7 @@ final frameBytes = [
     20,
     188,
   ]),
-// String list
+  // String list
   Uint8List.fromList([
     180,
     0,
@@ -824,7 +824,7 @@ final frameBytes = [
     122,
     169,
   ]),
-// List with null
+  // List with null
   Uint8List.fromList([
     61,
     0,
@@ -888,7 +888,7 @@ final frameBytes = [
     18,
     249,
   ]),
-// List with different types
+  // List with different types
   Uint8List.fromList([
     119,
     0,
@@ -1010,7 +1010,7 @@ final frameBytes = [
     94,
     200,
   ]),
-// Map
+  // Map
   Uint8List.fromList([
     177,
     0,
@@ -1190,7 +1190,7 @@ final frameBytes = [
     244,
     158,
   ]),
-// DateTime test
+  // DateTime test
   Uint8List.fromList([
     46,
     0,
@@ -1239,7 +1239,7 @@ final frameBytes = [
     96,
     194,
   ]),
-// BigInt Test
+  // BigInt Test
   Uint8List.fromList([
     63,
     0,

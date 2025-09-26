@@ -22,7 +22,7 @@ class IndexableSkipList<K, V> {
 
   /// Not part of public API
   IndexableSkipList(this._comparator, [Random? random])
-      : _random = random ?? Random();
+    : _random = random ?? Random();
 
   /// Not part of public API
   int get length => _length;

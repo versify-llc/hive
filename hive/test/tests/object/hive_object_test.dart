@@ -159,19 +159,21 @@ void main() {
         expect(obj.isInBox, true);
       });
 
-      test('returns the result ob box.containsKey() if object is in lazy box',
-          () {
-        final obj = TestHiveObject();
-        final box = MockBox();
-        when(() => box.lazy).thenReturn(true);
-        obj.init('key', box);
+      test(
+        'returns the result ob box.containsKey() if object is in lazy box',
+        () {
+          final obj = TestHiveObject();
+          final box = MockBox();
+          when(() => box.lazy).thenReturn(true);
+          obj.init('key', box);
 
-        when(() => box.containsKey('key')).thenReturn(true);
-        expect(obj.isInBox, true);
+          when(() => box.containsKey('key')).thenReturn(true);
+          expect(obj.isInBox, true);
 
-        when(() => box.containsKey('key')).thenReturn(false);
-        expect(obj.isInBox, false);
-      });
+          when(() => box.containsKey('key')).thenReturn(false);
+          expect(obj.isInBox, false);
+        },
+      );
     });
   });
 }
