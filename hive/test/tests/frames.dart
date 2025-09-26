@@ -25,70 +25,70 @@ class _HiveAesCipherStaticIV extends HiveAesCipher {
 HiveCipher get testCipher => _HiveAesCipherStaticIV();
 
 List<Frame> get testFrames => <Frame>[
-      Frame.deleted(0),
-      Frame.deleted(555),
-      Frame(123, null),
-      Frame(0, 'Int key1'),
-      Frame(1, 'Int key2'),
-      Frame(2 ^ 32 - 1, 'Int key3'),
-      Frame.deleted('Tombstone frame'),
-      Frame('Null frame', null),
-      Frame('Int', 123123123),
-      Frame('Large int', 2 ^ 32),
-      Frame('Bool true', true),
-      Frame('Bool false', false),
-      Frame('Float', 12312.991283),
-      Frame(
-        'Unicode string',
-        'A few characters which are not ASCII: 🇵🇬 😀 🐝 걟 ＄ 乽 👨‍🚀',
-      ),
-      Frame('Empty list', []),
-      Frame('Byte list', Uint8List.fromList([1, 12, 123, 1234])),
-      Frame('Byte list with mask', Uint8List.fromList([0x90, 0xA9, 1, 2, 3])),
-      Frame('Int list', [123, 456, 129318238]),
-      Frame('Bool list', [true, false, false, true]),
-      Frame('Double list', [
-        10.1723812,
-        double.infinity,
-        double.maxFinite,
-        double.minPositive,
-        double.negativeInfinity,
-      ]),
-      Frame('String list', [
-        'hello',
-        '🧙‍♂️ 👨‍👨‍👧‍👦 ',
-        ' ﻬ ﻭ ﻮ ﻯ ﻰ ﻱ',
-        'അ ആ ഇ ',
-        ' צּ קּ רּ שּ ',
-        'ｩ ｪ ｫ ｬ ｭ ｮ ｯ ｰ ',
-      ]),
-      Frame('List with null', ['This', 'is', 'a', 'test', null]),
-      Frame('List with different types', [
-        'List',
-        [1, 2, 3],
-        5.8,
-        true,
-        12341234,
-        {'t': true, 'f': false},
-      ]),
-      Frame('Map', {
-        'Bool': true,
-        'Int': 1234,
-        'Double': 15.7,
-        'String': 'Hello',
-        'List': [1, 2, null],
-        'Null': null,
-        'Map': {'Key': 'Val', 'Key2': 2},
-      }),
-      Frame('DateTime test', [
-        DateTimeWithoutTZ.fromMillisecondsSinceEpoch(0),
-        DateTimeWithoutTZ.fromMillisecondsSinceEpoch(1566656623020),
-      ]),
-      Frame(
-        'BigInt Test',
-        BigInt.parse('1234567890123456789012345678901234567890'),
-      ),
-    ];
+  Frame.deleted(0),
+  Frame.deleted(555),
+  Frame(123, null),
+  Frame(0, 'Int key1'),
+  Frame(1, 'Int key2'),
+  Frame(2 ^ 32 - 1, 'Int key3'),
+  Frame.deleted('Tombstone frame'),
+  Frame('Null frame', null),
+  Frame('Int', 123123123),
+  Frame('Large int', 2 ^ 32),
+  Frame('Bool true', true),
+  Frame('Bool false', false),
+  Frame('Float', 12312.991283),
+  Frame(
+    'Unicode string',
+    'A few characters which are not ASCII: 🇵🇬 😀 🐝 걟 ＄ 乽 👨‍🚀',
+  ),
+  Frame('Empty list', []),
+  Frame('Byte list', Uint8List.fromList([1, 12, 123, 1234])),
+  Frame('Byte list with mask', Uint8List.fromList([0x90, 0xA9, 1, 2, 3])),
+  Frame('Int list', [123, 456, 129318238]),
+  Frame('Bool list', [true, false, false, true]),
+  Frame('Double list', [
+    10.1723812,
+    double.infinity,
+    double.maxFinite,
+    double.minPositive,
+    double.negativeInfinity,
+  ]),
+  Frame('String list', [
+    'hello',
+    '🧙‍♂️ 👨‍👨‍👧‍👦 ',
+    ' ﻬ ﻭ ﻮ ﻯ ﻰ ﻱ',
+    'അ ആ ഇ ',
+    ' צּ קּ רּ שּ ',
+    'ｩ ｪ ｫ ｬ ｭ ｮ ｯ ｰ ',
+  ]),
+  Frame('List with null', ['This', 'is', 'a', 'test', null]),
+  Frame('List with different types', [
+    'List',
+    [1, 2, 3],
+    5.8,
+    true,
+    12341234,
+    {'t': true, 'f': false},
+  ]),
+  Frame('Map', {
+    'Bool': true,
+    'Int': 1234,
+    'Double': 15.7,
+    'String': 'Hello',
+    'List': [1, 2, null],
+    'Null': null,
+    'Map': {'Key': 'Val', 'Key2': 2},
+  }),
+  Frame('DateTime test', [
+    DateTimeWithoutTZ.fromMillisecondsSinceEpoch(0),
+    DateTimeWithoutTZ.fromMillisecondsSinceEpoch(1566656623020),
+  ]),
+  Frame(
+    'BigInt Test',
+    BigInt.parse('1234567890123456789012345678901234567890'),
+  ),
+];
 
 List<Frame> framesSetLengthOffset(List<Frame> frames, List<Uint8List> bytes) {
   var offset = 0;
@@ -162,7 +162,7 @@ void expectFrames(Iterable<Frame> f1, Iterable<Frame> f2) {
   }
 }
 
-void buildGoldens() async {
+Future<void> buildGoldens() async {
   Future<void> generate(
     String fileName,
     String varName,
@@ -176,7 +176,7 @@ void buildGoldens() async {
     for (final frame in testFrames) {
       code.writeln('// ${frame.key}');
       final bytes = transformer(frame);
-      code.writeln('Uint8List.fromList(${bytes.toString()}),');
+      code.writeln('Uint8List.fromList($bytes),');
     }
     code.writeln('];');
     file.writeAsStringSync(code.toString(), flush: true);

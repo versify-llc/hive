@@ -11,7 +11,7 @@ import 'package:source_helper/source_helper.dart';
 class TypeAdapterGenerator extends GeneratorForAnnotation<HiveType> {
   static String generateName(String typeName) {
     var adapterName = '${typeName}Adapter'.replaceAll(
-      RegExp(r'[^A-Za-z0-9]+'),
+      RegExp('[^A-Za-z0-9]+'),
       '',
     );
     if (adapterName.startsWith('_')) {

@@ -1,4 +1,4 @@
-library hive_flutter;
+library;
 
 import 'dart:async';
 

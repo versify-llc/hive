@@ -369,7 +369,7 @@ void main() {
       test('null', () {
         for (final bytes in nullFramesBytes) {
           final reader = BinaryReaderImpl(bytes, testRegistry);
-          final frame = reader.readFrame(lazy: false);
+          final frame = reader.readFrame();
 
           expect(frame, null);
         }
@@ -390,10 +390,7 @@ void main() {
         for (var i = 0; i < frames.length; i++) {
           final frame = frames[i];
           final reader = BinaryReaderImpl(frameBytes[i], testRegistry);
-          expectFrame(
-            reader.readFrame(lazy: false, frameOffset: offset)!,
-            frame,
-          );
+          expectFrame(reader.readFrame(frameOffset: offset)!, frame);
           offset += frameBytes[i].length;
         }
       });
@@ -419,11 +416,7 @@ void main() {
           final frame = frames[i];
           final reader = BinaryReaderImpl(frameBytesEncrypted[i], testRegistry);
           expectFrame(
-            reader.readFrame(
-              lazy: false,
-              frameOffset: offset,
-              cipher: testCipher,
-            )!,
+            reader.readFrame(frameOffset: offset, cipher: testCipher)!,
             frame,
           );
           offset += frameBytesEncrypted[i].length;

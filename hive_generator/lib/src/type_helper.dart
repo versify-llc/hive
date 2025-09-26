@@ -26,7 +26,7 @@ String revivableToString(DartObject? object, List<String> typeInformation) {
   } else {
     // Classes
     final nextTypeInformation = [...typeInformation, '$object'];
-    final prefix = kConstConstructors ? 'const ' : '';
+    const prefix = kConstConstructors ? 'const ' : '';
     final ctor = revivable.accessor.isEmpty ? '' : '.${revivable.accessor}';
     final arguments = <String>[
       for (final arg in revivable.positionalArguments)

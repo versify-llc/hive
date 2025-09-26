@@ -4,7 +4,7 @@ import 'package:collection/collection.dart';
 import 'package:hive/hive.dart';
 import 'package:source_gen/source_gen.dart';
 
-final _hiveFieldChecker = const TypeChecker.typeNamed(HiveField);
+const _hiveFieldChecker = TypeChecker.typeNamed(HiveField);
 
 class HiveFieldInfo {
   HiveFieldInfo(this.index, this.defaultValue);

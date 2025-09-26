@@ -12,8 +12,7 @@ class BackendManager implements BackendManagerInterface {
 
   static BackendManager select([
     HiveStorageBackendPreference? backendPreference,
-  ]) =>
-      BackendManager();
+  ]) => BackendManager();
 
   @override
   Future<StorageBackend> open(
@@ -24,8 +23,10 @@ class BackendManager implements BackendManagerInterface {
     String? collection,
   ) async {
     if (path == null) {
-      throw HiveError('You need to initialize Hive or '
-          'provide a path to store the box.');
+      throw HiveError(
+        'You need to initialize Hive or '
+        'provide a path to store the box.',
+      );
     }
 
     if (path.endsWith(_delimiter)) path = path.substring(0, path.length - 1);
@@ -45,6 +46,7 @@ class BackendManager implements BackendManagerInterface {
 
     final backend = StorageBackendVm(file, lockFile, crashRecovery, cipher);
     await backend.open();
+
     return backend;
   }
 

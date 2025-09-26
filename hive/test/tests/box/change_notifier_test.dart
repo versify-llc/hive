@@ -25,7 +25,7 @@ void main() {
       notifier.notify(Frame('key1', 'newVal'));
       notifier.notify(Frame('key2', 'newVal2'));
 
-      await Future.delayed(Duration(milliseconds: 1));
+      await Future.delayed(const Duration(milliseconds: 1));
 
       expect(allEvents, [
         BoxEvent('key1', null, true),

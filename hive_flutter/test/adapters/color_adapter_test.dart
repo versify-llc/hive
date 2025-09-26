@@ -11,7 +11,7 @@ void main() {
     test('.read()', () {
       const color = Color(0xFF000000);
       final BinaryReader binaryReader = MockBinaryReader();
-      when(binaryReader.readInt()).thenReturn(color.value);
+      when(binaryReader.readInt()).thenReturn(color.toARGB32());
 
       final readColor = ColorAdapter().read(binaryReader);
       verify(binaryReader.readInt());
@@ -23,7 +23,7 @@ void main() {
       final BinaryWriter binaryWriter = MockBinaryWriter();
 
       ColorAdapter().write(binaryWriter, color);
-      verify(binaryWriter.writeInt(color.value));
+      verify(binaryWriter.writeInt(color.toARGB32()));
     });
   });
 }

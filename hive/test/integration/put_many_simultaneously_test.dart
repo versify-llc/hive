@@ -1,10 +1,9 @@
 import 'package:test/test.dart';
 
-import '../util/is_browser.dart';
 import 'integration.dart';
 
 Future _performTest(bool lazy) async {
-  final amount = isBrowser ? 10 : 100;
+  const amount = 100;
   var box = await openBox(lazy);
 
   Future putEntries() async {
@@ -27,13 +26,9 @@ Future _performTest(bool lazy) async {
 }
 
 void main() {
-  group(
-    'put many entries simultaneously',
-    () {
-      test('normal box', () => _performTest(false));
+  group('put many entries simultaneously', () {
+    test('normal box', () => _performTest(false));
 
-      test('lazy box', () => _performTest(true));
-    },
-    timeout: longTimeout,
-  );
+    test('lazy box', () => _performTest(true));
+  }, timeout: longTimeout);
 }

@@ -21,7 +21,7 @@ class TestAdapter extends TypeAdapter<TestObject> {
   }
 
   @override
-  void write(BinaryWriter writer, obj) {
+  void write(BinaryWriter writer, TestObject obj) {
     writer.writeInt32(obj.value);
   }
 }

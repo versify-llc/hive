@@ -1,12 +1,11 @@
 import 'package:test/test.dart';
 
 import '../tests/frames.dart';
-import '../util/is_browser.dart';
 import 'integration.dart';
 
 Future _performTest(bool lazy) async {
   final hive = await createHive();
-  final repeat = isBrowser ? 20 : 1000;
+  const repeat = 1000;
   var box = await openBox(lazy, hive: hive);
   for (var i = 0; i < repeat; i++) {
     for (final frame in valueTestFrames) {
@@ -24,13 +23,9 @@ Future _performTest(bool lazy) async {
 }
 
 void main() {
-  group(
-    'put many strings',
-    () {
-      test('normal box', () => _performTest(false));
+  group('put many strings', () {
+    test('normal box', () => _performTest(false));
 
-      test('lazy box', () => _performTest(true));
-    },
-    timeout: longTimeout,
-  );
+    test('lazy box', () => _performTest(true));
+  }, timeout: longTimeout);
 }

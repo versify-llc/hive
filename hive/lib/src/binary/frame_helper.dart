@@ -18,11 +18,7 @@ class FrameHelper {
     while (reader.availableBytes != 0) {
       final frameOffset = reader.usedBytes;
 
-      final frame = reader.readFrame(
-        cipher: cipher,
-        lazy: false,
-        frameOffset: frameOffset,
-      );
+      final frame = reader.readFrame(cipher: cipher, frameOffset: frameOffset);
       if (frame == null) return frameOffset;
 
       keystore!.insert(frame, notify: false);

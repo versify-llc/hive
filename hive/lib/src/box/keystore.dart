@@ -5,13 +5,12 @@ import 'dart:collection';
 
 import 'package:hive/hive.dart';
 import 'package:hive/src/binary/frame.dart';
+import 'package:hive/src/box/box_base_impl.dart';
 import 'package:hive/src/box/change_notifier.dart';
 import 'package:hive/src/box/default_key_comparator.dart';
 import 'package:hive/src/object/hive_object.dart';
 import 'package:hive/src/util/indexable_skip_list.dart';
 import 'package:meta/meta.dart';
-
-import 'package:hive/src/box/box_base_impl.dart';
 
 /// Not part of public API
 class KeyTransaction<E> {
@@ -43,7 +42,7 @@ class Keystore<E> {
 
   /// Not part of public API
   Keystore(this._box, this._notifier, KeyComparator? keyComparator)
-      : _store = IndexableSkipList(keyComparator ?? defaultKeyComparator);
+    : _store = IndexableSkipList(keyComparator ?? defaultKeyComparator);
 
   /// Not part of public API
   factory Keystore.debug({
@@ -172,7 +171,7 @@ class Keystore<E> {
       _deletedEntries++;
       if (deletedFrame.value is HiveObjectMixin &&
           !identical(deletedFrame.value, value)) {
-        (deletedFrame.value as HiveObjectMixin).dispose();
+        (deletedFrame.value as HiveObjectMixin?)?.dispose();
       }
     }
 
@@ -261,7 +260,7 @@ class Keystore<E> {
 
     for (final frame in frameList) {
       if (frame.value is HiveObjectMixin) {
-        (frame.value as HiveObjectMixin).dispose();
+        (frame.value as HiveObjectMixin?)?.dispose();
       }
       _notifier.notify(Frame.deleted(frame.key));
     }

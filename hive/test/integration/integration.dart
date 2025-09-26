@@ -7,16 +7,12 @@ import 'package:hive/src/hive_impl.dart';
 import 'package:test/test.dart';
 
 import '../tests/common.dart';
-import '../util/is_browser.dart';
 
 Future<HiveImpl> createHive() async {
   final hive = HiveImpl();
-  if (!isBrowser) {
-    final dir = await getTempDir();
-    hive.init(dir.path);
-  } else {
-    hive.init(null);
-  }
+  final dir = await getTempDir();
+  hive.init(dir.path);
+
   return hive;
 }
 

@@ -17,20 +17,7 @@ class TestAdapter extends TypeAdapter<int> {
   }
 
   @override
-  void write(BinaryWriter writer, obj) {}
-}
-
-class TestAdapter2 extends TypeAdapter<int> {
-  @override
-  int get typeId => 1;
-
-  @override
-  int read(BinaryReader reader) {
-    return 5;
-  }
-
-  @override
-  void write(BinaryWriter writer, obj) {}
+  void write(BinaryWriter writer, int obj) {}
 }
 
 class Parent {}
@@ -130,7 +117,7 @@ void main() {
 
       test('returns first matching adapter', () {
         final registry = TypeRegistryImpl();
-        final adapter1 = TestAdapter(0);
+        final adapter1 = TestAdapter();
         final adapter2 = TestAdapter(1);
         registry.registerAdapter(adapter1);
         registry.registerAdapter(adapter2);
@@ -140,11 +127,10 @@ void main() {
         expect(resolvedAdapter.adapter, adapter1);
       });
 
-      test(
-          'returns adapter if exact runtime type of value matches ignoring '
+      test('returns adapter if exact runtime type of value matches ignoring '
           'registration order', () {
         final registry = TypeRegistryImpl();
-        final parentAdapter = ParentAdapter(0);
+        final parentAdapter = ParentAdapter();
         final childAdapter = ChildAdapter(1);
         registry.registerAdapter(parentAdapter);
         registry.registerAdapter(childAdapter);
@@ -156,7 +142,7 @@ void main() {
 
       test('returns super type adapter for subtype', () {
         final registry = TypeRegistryImpl();
-        final parentAdapter = ParentAdapter(0);
+        final parentAdapter = ParentAdapter();
         registry.registerAdapter(parentAdapter);
 
         final resolvedAdapter = registry.findAdapterForValue(Child());

@@ -1,4 +1,4 @@
-library hive_object_internal;
+library;
 
 import 'package:hive/hive.dart';
 import 'package:hive/src/object/hive_list_impl.dart';

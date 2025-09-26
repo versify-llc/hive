@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_classes_with_only_static_members
+
 import 'dart:typed_data';
 
 import 'package:hive/src/crypto/aes_tables.dart';
@@ -68,7 +70,8 @@ class AesEngine {
     w[1][2] = t6;
     w[1][3] = t7;
 
-    int u, rcon = 1;
+    int u;
+    int rcon = 1;
 
     for (var i = 2; i < 14; i += 2) {
       u = _subWord((t7 >> 8) | (((t7 & _mask8) << 24) & _mask32)) ^ rcon;
@@ -126,46 +129,58 @@ class AesEngine {
     var c2 = inp.readUint32(inpOff + 8) ^ workingKey[0][2];
     var c3 = inp.readUint32(inpOff + 12) ^ workingKey[0][3];
 
-    int r0, r1, r2, r3;
+    int r0;
+    int r1;
+    int r2;
+    int r3;
+
     var r = 1;
     while (r < rounds - 1) {
-      r0 = table0[c0 & 255] ^
+      r0 =
+          table0[c0 & 255] ^
           table1[(c1 >> 8) & 255] ^
           table2[(c2 >> 16) & 255] ^
           table3[(c3 >> 24) & 255] ^
           workingKey[r][0];
-      r1 = table0[c1 & 255] ^
+      r1 =
+          table0[c1 & 255] ^
           table1[(c2 >> 8) & 255] ^
           table2[(c3 >> 16) & 255] ^
           table3[(c0 >> 24) & 255] ^
           workingKey[r][1];
-      r2 = table0[c2 & 255] ^
+      r2 =
+          table0[c2 & 255] ^
           table1[(c3 >> 8) & 255] ^
           table2[(c0 >> 16) & 255] ^
           table3[(c1 >> 24) & 255] ^
           workingKey[r][2];
-      r3 = table0[c3 & 255] ^
+      r3 =
+          table0[c3 & 255] ^
           table1[(c0 >> 8) & 255] ^
           table2[(c1 >> 16) & 255] ^
           table3[(c2 >> 24) & 255] ^
           workingKey[r][3];
       r++;
-      c0 = table0[r0 & 255] ^
+      c0 =
+          table0[r0 & 255] ^
           table1[(r1 >> 8) & 255] ^
           table2[(r2 >> 16) & 255] ^
           table3[(r3 >> 24) & 255] ^
           workingKey[r][0];
-      c1 = table0[r1 & 255] ^
+      c1 =
+          table0[r1 & 255] ^
           table1[(r2 >> 8) & 255] ^
           table2[(r3 >> 16) & 255] ^
           table3[(r0 >> 24) & 255] ^
           workingKey[r][1];
-      c2 = table0[r2 & 255] ^
+      c2 =
+          table0[r2 & 255] ^
           table1[(r3 >> 8) & 255] ^
           table2[(r0 >> 16) & 255] ^
           table3[(r1 >> 24) & 255] ^
           workingKey[r][2];
-      c3 = table0[r3 & 255] ^
+      c3 =
+          table0[r3 & 255] ^
           table1[(r0 >> 8) & 255] ^
           table2[(r1 >> 16) & 255] ^
           table3[(r2 >> 24) & 255] ^
@@ -173,22 +188,26 @@ class AesEngine {
       r++;
     }
 
-    r0 = table0[c0 & 255] ^
+    r0 =
+        table0[c0 & 255] ^
         table1[(c1 >> 8) & 255] ^
         table2[(c2 >> 16) & 255] ^
         table3[(c3 >> 24) & 255] ^
         workingKey[r][0];
-    r1 = table0[c1 & 255] ^
+    r1 =
+        table0[c1 & 255] ^
         table1[(c2 >> 8) & 255] ^
         table2[(c3 >> 16) & 255] ^
         table3[(c0 >> 24) & 255] ^
         workingKey[r][1];
-    r2 = table0[c2 & 255] ^
+    r2 =
+        table0[c2 & 255] ^
         table1[(c3 >> 8) & 255] ^
         table2[(c0 >> 16) & 255] ^
         table3[(c1 >> 24) & 255] ^
         workingKey[r][2];
-    r3 = table0[c3 & 255] ^
+    r3 =
+        table0[c3 & 255] ^
         table1[(c0 >> 8) & 255] ^
         table2[(c1 >> 16) & 255] ^
         table3[(c2 >> 24) & 255] ^
@@ -197,22 +216,26 @@ class AesEngine {
 
     // the final round's table is a simple function of S so we don't use a
     // whole other four tables for it
-    c0 = (sBox[r0 & 255] & 255) ^
+    c0 =
+        (sBox[r0 & 255] & 255) ^
         (sBox[(r1 >> 8) & 255] << 8) ^
         (sBox[(r2 >> 16) & 255] << 16) ^
         (sBox[(r3 >> 24) & 255] << 24) ^
         workingKey[r][0];
-    c1 = (sBox[r1 & 255] & 255) ^
+    c1 =
+        (sBox[r1 & 255] & 255) ^
         (sBox[(r2 >> 8) & 255] << 8) ^
         (sBox[(r3 >> 16) & 255] << 16) ^
         (sBox[(r0 >> 24) & 255] << 24) ^
         workingKey[r][1];
-    c2 = (sBox[r2 & 255] & 255) ^
+    c2 =
+        (sBox[r2 & 255] & 255) ^
         (sBox[(r3 >> 8) & 255] << 8) ^
         (sBox[(r0 >> 16) & 255] << 16) ^
         (sBox[(r1 >> 24) & 255] << 24) ^
         workingKey[r][2];
-    c3 = (sBox[r3 & 255] & 255) ^
+    c3 =
+        (sBox[r3 & 255] & 255) ^
         (sBox[(r0 >> 8) & 255] << 8) ^
         (sBox[(r1 >> 16) & 255] << 16) ^
         (sBox[(r2 >> 24) & 255] << 24) ^
@@ -237,46 +260,58 @@ class AesEngine {
     var c2 = inp.readUint32(inpOff + 8) ^ workingKey[rounds][2];
     var c3 = inp.readUint32(inpOff + 12) ^ workingKey[rounds][3];
 
-    int r0, r1, r2, r3;
+    int r0;
+    int r1;
+    int r2;
+    int r3;
+
     var r = rounds - 1;
     while (r > 1) {
-      r0 = table0Inv[c0 & 255] ^
+      r0 =
+          table0Inv[c0 & 255] ^
           table1Inv[(c3 >> 8) & 255] ^
           table2Inv[(c2 >> 16) & 255] ^
           table3Inv[(c1 >> 24) & 255] ^
           workingKey[r][0];
-      r1 = table0Inv[c1 & 255] ^
+      r1 =
+          table0Inv[c1 & 255] ^
           table1Inv[(c0 >> 8) & 255] ^
           table2Inv[(c3 >> 16) & 255] ^
           table3Inv[(c2 >> 24) & 255] ^
           workingKey[r][1];
-      r2 = table0Inv[c2 & 255] ^
+      r2 =
+          table0Inv[c2 & 255] ^
           table1Inv[(c1 >> 8) & 255] ^
           table2Inv[(c0 >> 16) & 255] ^
           table3Inv[(c3 >> 24) & 255] ^
           workingKey[r][2];
-      r3 = table0Inv[c3 & 255] ^
+      r3 =
+          table0Inv[c3 & 255] ^
           table1Inv[(c2 >> 8) & 255] ^
           table2Inv[(c1 >> 16) & 255] ^
           table3Inv[(c0 >> 24) & 255] ^
           workingKey[r][3];
       r--;
-      c0 = table0Inv[r0 & 255] ^
+      c0 =
+          table0Inv[r0 & 255] ^
           table1Inv[(r3 >> 8) & 255] ^
           table2Inv[(r2 >> 16) & 255] ^
           table3Inv[(r1 >> 24) & 255] ^
           workingKey[r][0];
-      c1 = table0Inv[r1 & 255] ^
+      c1 =
+          table0Inv[r1 & 255] ^
           table1Inv[(r0 >> 8) & 255] ^
           table2Inv[(r3 >> 16) & 255] ^
           table3Inv[(r2 >> 24) & 255] ^
           workingKey[r][1];
-      c2 = table0Inv[r2 & 255] ^
+      c2 =
+          table0Inv[r2 & 255] ^
           table1Inv[(r1 >> 8) & 255] ^
           table2Inv[(r0 >> 16) & 255] ^
           table3Inv[(r3 >> 24) & 255] ^
           workingKey[r][2];
-      c3 = table0Inv[r3 & 255] ^
+      c3 =
+          table0Inv[r3 & 255] ^
           table1Inv[(r2 >> 8) & 255] ^
           table2Inv[(r1 >> 16) & 255] ^
           table3Inv[(r0 >> 24) & 255] ^
@@ -284,22 +319,26 @@ class AesEngine {
       r--;
     }
 
-    r0 = table0Inv[c0 & 255] ^
+    r0 =
+        table0Inv[c0 & 255] ^
         table1Inv[(c3 >> 8) & 255] ^
         table2Inv[(c2 >> 16) & 255] ^
         table3Inv[(c1 >> 24) & 255] ^
         workingKey[r][0];
-    r1 = table0Inv[c1 & 255] ^
+    r1 =
+        table0Inv[c1 & 255] ^
         table1Inv[(c0 >> 8) & 255] ^
         table2Inv[(c3 >> 16) & 255] ^
         table3Inv[(c2 >> 24) & 255] ^
         workingKey[r][1];
-    r2 = table0Inv[c2 & 255] ^
+    r2 =
+        table0Inv[c2 & 255] ^
         table1Inv[(c1 >> 8) & 255] ^
         table2Inv[(c0 >> 16) & 255] ^
         table3Inv[(c3 >> 24) & 255] ^
         workingKey[r][2];
-    r3 = table0Inv[c3 & 255] ^
+    r3 =
+        table0Inv[c3 & 255] ^
         table1Inv[(c2 >> 8) & 255] ^
         table2Inv[(c1 >> 16) & 255] ^
         table3Inv[(c0 >> 24) & 255] ^
@@ -307,22 +346,26 @@ class AesEngine {
 
     // the final round's table is a simple function of Si so we don't use a
     // whole other four tables for it
-    c0 = sBoxInv[r0 & 255] ^
+    c0 =
+        sBoxInv[r0 & 255] ^
         (sBoxInv[(r3 >> 8) & 255] << 8) ^
         (sBoxInv[(r2 >> 16) & 255] << 16) ^
         (sBoxInv[(r1 >> 24) & 255] << 24) ^
         workingKey[0][0];
-    c1 = (sBoxInv[r1 & 255] & 255) ^
+    c1 =
+        (sBoxInv[r1 & 255] & 255) ^
         (sBoxInv[(r0 >> 8) & 255] << 8) ^
         (sBoxInv[(r3 >> 16) & 255] << 16) ^
         (sBoxInv[(r2 >> 24) & 255] << 24) ^
         workingKey[0][1];
-    c2 = (sBoxInv[r2 & 255] & 255) ^
+    c2 =
+        (sBoxInv[r2 & 255] & 255) ^
         (sBoxInv[(r1 >> 8) & 255] << 8) ^
         (sBoxInv[(r0 >> 16) & 255] << 16) ^
         (sBoxInv[(r3 >> 24) & 255] << 24) ^
         workingKey[0][2];
-    c3 = (sBoxInv[r3 & 255] & 255) ^
+    c3 =
+        (sBoxInv[r3 & 255] & 255) ^
         (sBoxInv[(r2 >> 8) & 255] << 8) ^
         (sBoxInv[(r1 >> 16) & 255] << 16) ^
         (sBoxInv[(r0 >> 24) & 255] << 24) ^

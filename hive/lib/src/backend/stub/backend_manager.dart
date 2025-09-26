@@ -7,8 +7,7 @@ import 'package:hive/src/backend/storage_backend.dart';
 class BackendManager implements BackendManagerInterface {
   static BackendManager select([
     HiveStorageBackendPreference? backendPreference,
-  ]) =>
-      BackendManager();
+  ]) => BackendManager();
 
   @override
   Future<StorageBackend> open(

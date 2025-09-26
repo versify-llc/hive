@@ -9,7 +9,7 @@ class BufferedFileWriter {
 
   final int _maxBufferSize;
 
-  final _buffer = BytesBuilder(copy: true);
+  final _buffer = BytesBuilder();
 
   /// Not part of public API
   BufferedFileWriter(this._file, [this._maxBufferSize = _defaultMaxBufferSize]);

@@ -20,7 +20,7 @@ class _TestAdapter extends TypeAdapter<int> {
   int read(_) => 5;
 
   @override
-  void write(_, __) {}
+  void write(_, _) {}
 }
 
 void main() {

@@ -9,7 +9,7 @@ Future _asyncRead(
 }) {
   return rw.syncRead(() async {
     history.add('startread$id');
-    await Future.delayed(Duration(milliseconds: 10));
+    await Future.delayed(const Duration(milliseconds: 10));
     if (throwError!) {
       throw 'error$id'; // ignore: only_throw_errors
     }
@@ -25,7 +25,7 @@ Future _asyncWrite(
 }) {
   return rw.syncWrite(() async {
     history.add('startwrite$id');
-    await Future.delayed(Duration(milliseconds: 10));
+    await Future.delayed(const Duration(milliseconds: 10));
     if (throwError!) {
       throw 'error$id'; // ignore: only_throw_errors
     }
@@ -41,7 +41,7 @@ Future _asyncReadWrite(
 }) {
   return rw.syncReadWrite(() async {
     history.add('startreadwrite$id');
-    await Future.delayed(Duration(milliseconds: 10));
+    await Future.delayed(const Duration(milliseconds: 10));
     if (throwError!) {
       throw 'error$id'; // ignore: only_throw_errors
     }
@@ -49,16 +49,10 @@ Future _asyncReadWrite(
   });
 }
 
-typedef _Operation = Future Function(
-  ReadWriteSync rw,
-  int id,
-  List<String> history, {
-  bool? throwError,
-});
-
 Future _asyncOperation(
   ReadWriteSync rw,
-  _Operation operation,
+  Future Function(ReadWriteSync, int, List<String>, {bool? throwError})
+  operation,
   int id,
   List<String> history, {
   bool throwError = false,
@@ -109,8 +103,13 @@ void main() {
         final rw = ReadWriteSync();
         final history = <String>[];
         final r1 = _asyncOperation(rw, _asyncRead, 0, history);
-        final r2 =
-            _asyncOperation(rw, _asyncRead, 1, history, throwError: true);
+        final r2 = _asyncOperation(
+          rw,
+          _asyncRead,
+          1,
+          history,
+          throwError: true,
+        );
         final r3 = _asyncOperation(rw, _asyncRead, 2, history);
         await Future.wait([r1, r2, r3]);
 
@@ -159,8 +158,13 @@ void main() {
         final rw = ReadWriteSync();
         final history = <String>[];
         final r1 = _asyncOperation(rw, _asyncWrite, 0, history);
-        final r2 =
-            _asyncOperation(rw, _asyncWrite, 1, history, throwError: true);
+        final r2 = _asyncOperation(
+          rw,
+          _asyncWrite,
+          1,
+          history,
+          throwError: true,
+        );
         final r3 = _asyncOperation(rw, _asyncWrite, 2, history);
         await Future.wait([r1, r2, r3]);
 
@@ -202,8 +206,13 @@ void main() {
         final rw = ReadWriteSync();
         final history = <String>[];
         final r1 = _asyncOperation(rw, _asyncReadWrite, 0, history);
-        final r2 =
-            _asyncOperation(rw, _asyncReadWrite, 1, history, throwError: true);
+        final r2 = _asyncOperation(
+          rw,
+          _asyncReadWrite,
+          1,
+          history,
+          throwError: true,
+        );
         final r3 = _asyncOperation(rw, _asyncReadWrite, 2, history);
         await Future.wait([r1, r2, r3]);
 

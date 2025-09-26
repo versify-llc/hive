@@ -18,7 +18,7 @@ class HiveAesCipher implements HiveCipher {
 
     final keyBytes = Uint8List.fromList(key);
     _cipher = AesCbcPkcs7(keyBytes);
-    _keyCrc = Crc32.compute(sha256.convert(keyBytes).bytes as Uint8List);
+    _keyCrc = crc32Compute(sha256.convert(keyBytes).bytes as Uint8List);
   }
 
   @override

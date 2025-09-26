@@ -13,14 +13,9 @@ extension HiveX on HiveInterface {
     WidgetsFlutterBinding.ensureInitialized();
 
     String? path;
-    if (!kIsWeb) {
-      final appDir = await getApplicationDocumentsDirectory();
-      path = path_helper.join(appDir.path, subDir);
-    }
+    final appDir = await getApplicationDocumentsDirectory();
+    path = path_helper.join(appDir.path, subDir);
 
-    init(
-      path,
-      backendPreference: backendPreference,
-    );
+    init(path, backendPreference: backendPreference);
   }
 }

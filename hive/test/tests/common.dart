@@ -22,8 +22,12 @@ Matcher throwsHiveError([String? contains]) {
 }
 
 final random = Random();
-String tempPath =
-    path.join(Directory.current.path, '.dart_tool', 'test', 'tmp');
+String tempPath = path.join(
+  Directory.current.path,
+  '.dart_tool',
+  'test',
+  'tmp',
+);
 String assetsPath = path.join(Directory.current.path, 'test', 'assets');
 
 Future<File> getTempFile([List<int>? bytes]) async {
@@ -111,8 +115,9 @@ Future<void> _expectDirsEqual(
       final otherBytes = await otherFile.readAsBytes();
       expect(entityBytes, otherBytes);
     } else if (entity is Directory) {
-      final dir2Entity =
-          Directory(path.join(dir2.path, path.basename(entity.path)));
+      final dir2Entity = Directory(
+        path.join(dir2.path, path.basename(entity.path)),
+      );
       await expectDirsEqual(entity, dir2Entity);
     }
   }
@@ -134,4 +139,4 @@ Future<void> expectDirEqualsAssetDir(
 }
 
 void returnFutureVoid(When<Future<void>> v) =>
-    v.thenAnswer((i) => Future.value(null));
+    v.thenAnswer((i) => Future.value());

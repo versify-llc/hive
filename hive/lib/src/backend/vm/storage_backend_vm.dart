@@ -55,8 +55,8 @@ class StorageBackendVm extends StorageBackend {
     this._lockFile,
     this._crashRecovery,
     this._cipher,
-  )   : _frameHelper = FrameIoHelper(),
-        _sync = ReadWriteSync();
+  ) : _frameHelper = FrameIoHelper(),
+      _sync = ReadWriteSync();
 
   /// Not part of public API
   StorageBackendVm.debug(
@@ -94,8 +94,12 @@ class StorageBackendVm extends StorageBackend {
 
     int recoveryOffset;
     if (!lazy) {
-      recoveryOffset =
-          await _frameHelper.framesFromFile(path, keystore, registry, _cipher);
+      recoveryOffset = await _frameHelper.framesFromFile(
+        path,
+        keystore,
+        registry,
+        _cipher,
+      );
     } else {
       recoveryOffset = await _frameHelper.keysFromFile(path, keystore, _cipher);
     }
@@ -120,7 +124,7 @@ class StorageBackendVm extends StorageBackend {
       final bytes = await readRaf.read(frame.length!);
 
       final reader = BinaryReaderImpl(bytes, registry);
-      final readFrame = reader.readFrame(cipher: _cipher, lazy: false);
+      final readFrame = reader.readFrame(cipher: _cipher);
 
       if (readFrame == null) {
         throw HiveError(

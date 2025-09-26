@@ -20,10 +20,10 @@ class BinaryReaderImpl extends BinaryReader {
 
   /// Not part of public API
   BinaryReaderImpl(this._buffer, TypeRegistry typeRegistry, [int? bufferLength])
-      : _byteData = ByteData.view(_buffer.buffer, _buffer.offsetInBytes),
-        _bufferLength = bufferLength ?? _buffer.length,
-        _bufferLimit = bufferLength ?? _buffer.length,
-        _typeRegistry = typeRegistry as TypeRegistryImpl;
+    : _byteData = ByteData.view(_buffer.buffer, _buffer.offsetInBytes),
+      _bufferLength = bufferLength ?? _buffer.length,
+      _bufferLimit = bufferLength ?? _buffer.length,
+      _typeRegistry = typeRegistry as TypeRegistryImpl;
 
   @pragma('vm:prefer-inline')
   @pragma('dart2js:tryInline')
@@ -259,7 +259,7 @@ class BinaryReaderImpl extends BinaryReader {
     if (availableBytes < frameLength - 4) return null;
 
     final crc = _buffer.readUint32(_offset + frameLength - 8);
-    final computedCrc = Crc32.compute(
+    final computedCrc = crc32Compute(
       _buffer,
       offset: _offset - 4,
       length: frameLength - 4,
@@ -327,8 +327,10 @@ class BinaryReaderImpl extends BinaryReader {
       default:
         final resolved = _typeRegistry.findAdapterForTypeId(typeId);
         if (resolved == null) {
-          throw HiveError('Cannot read, unknown typeId: $typeId. '
-              'Did you forget to register an adapter?');
+          throw HiveError(
+            'Cannot read, unknown typeId: $typeId. '
+            'Did you forget to register an adapter?',
+          );
         }
         return resolved.adapter.read(this);
     }

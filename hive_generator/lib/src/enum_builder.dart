@@ -1,5 +1,5 @@
-import 'builder.dart';
-import 'helper.dart';
+import 'package:hive_generator/src/builder.dart';
+import 'package:hive_generator/src/helper.dart';
 
 class EnumBuilder extends Builder {
   EnumBuilder(super.cls, super.getters);
@@ -7,7 +7,9 @@ class EnumBuilder extends Builder {
   @override
   String buildRead() {
     check(
-        getters.isNotEmpty, '${cls.displayName} does not have any enum value.');
+      getters.isNotEmpty,
+      '${cls.displayName} does not have any enum value.',
+    );
 
     final code = StringBuffer();
     code.writeln('switch (reader.readByte()) {');

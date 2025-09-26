@@ -1,7 +1,7 @@
-library hive_flutter_adapters;
+library;
 
 import 'package:flutter/material.dart' show Color, TimeOfDay;
-import 'package:hive/hive.dart' show TypeAdapter, BinaryReader, BinaryWriter;
+import 'package:hive/hive.dart' show BinaryReader, BinaryWriter, TypeAdapter;
 
 export 'hive_flutter.dart';
 

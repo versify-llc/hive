@@ -6,6 +6,7 @@ import 'dart:typed_data';
 import 'package:hive/hive.dart';
 import 'package:hive/src/adapters/big_int_adapter.dart';
 import 'package:hive/src/adapters/date_time_adapter.dart';
+import 'package:hive/src/backend/storage_backend.dart';
 import 'package:hive/src/backend/storage_backend_memory.dart';
 import 'package:hive/src/box/box_base_impl.dart';
 import 'package:hive/src/box/box_impl.dart';
@@ -15,8 +16,6 @@ import 'package:hive/src/box/lazy_box_impl.dart';
 import 'package:hive/src/registry/type_registry_impl.dart';
 import 'package:hive/src/util/extensions.dart';
 import 'package:meta/meta.dart';
-
-import 'package:hive/src/backend/storage_backend.dart';
 
 /// Not part of public API
 class HiveImpl extends TypeRegistryImpl implements HiveInterface {
@@ -147,16 +146,17 @@ class HiveImpl extends TypeRegistryImpl implements HiveInterface {
       encryptionCipher = HiveAesCipher(encryptionKey);
     }
     return await _openBox<E>(
-      name,
-      false,
-      encryptionCipher,
-      keyComparator,
-      compactionStrategy,
-      crashRecovery,
-      path,
-      bytes,
-      collection,
-    ) as Box<E>;
+          name,
+          false,
+          encryptionCipher,
+          keyComparator,
+          compactionStrategy,
+          crashRecovery,
+          path,
+          bytes,
+          collection,
+        )
+        as Box<E>;
   }
 
   @override
@@ -174,16 +174,17 @@ class HiveImpl extends TypeRegistryImpl implements HiveInterface {
       encryptionCipher = HiveAesCipher(encryptionKey);
     }
     return await _openBox<E>(
-      name,
-      true,
-      encryptionCipher,
-      keyComparator,
-      compactionStrategy,
-      crashRecovery,
-      path,
-      null,
-      collection,
-    ) as LazyBox<E>;
+          name,
+          true,
+          encryptionCipher,
+          keyComparator,
+          compactionStrategy,
+          crashRecovery,
+          path,
+          null,
+          collection,
+        )
+        as LazyBox<E>;
   }
 
   BoxBase<E> _getBoxInternal<E>(String name, [bool? lazy]) {
@@ -196,8 +197,10 @@ class HiveImpl extends TypeRegistryImpl implements HiveInterface {
         final typeName = box is LazyBox
             ? 'LazyBox<${box.valueType}>'
             : 'Box<${box.valueType}>';
-        throw HiveError('The box "$lowerCaseName" is already open '
-            'and of type $typeName.');
+        throw HiveError(
+          'The box "$lowerCaseName" is already open '
+          'and of type $typeName.',
+        );
       }
     } else {
       throw HiveError('Box not found. Did you forget to call Hive.openBox()?');

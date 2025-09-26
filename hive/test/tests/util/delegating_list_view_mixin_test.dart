@@ -56,7 +56,7 @@ void main() {
     });
 
     test('.fold()', () {
-      expect(testList.fold('z', (dynamic p, e) => p + e), 'zabcc');
+      expect(testList.fold('z', (String p, e) => p + e), 'zabcc');
     });
 
     test('.forEach()', () {
@@ -266,8 +266,7 @@ class _TestList<T> with DelegatingListViewMixin<T> {
     int end,
     Iterable<T> iterable, [
     int skipCount = 0,
-  ]) =>
-      throw UnimplementedError();
+  ]) => throw UnimplementedError();
 
   @override
   void shuffle([Random? random]) => throw UnimplementedError();

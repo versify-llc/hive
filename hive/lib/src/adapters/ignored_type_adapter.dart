@@ -11,5 +11,5 @@ class IgnoredTypeAdapter<T> implements TypeAdapter<T?> {
   T? read(BinaryReader reader) => null;
 
   @override
-  void write(BinaryWriter writer, obj) {}
+  void write(BinaryWriter writer, T? obj) {}
 }

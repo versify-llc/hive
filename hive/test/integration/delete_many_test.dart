@@ -1,16 +1,15 @@
 import 'package:test/test.dart';
 
-import '../util/is_browser.dart';
 import 'integration.dart';
 
 Future _performTest(bool lazy) async {
-  final amount = isBrowser ? 1000 : 20000;
+  const amount = 20000;
   var box = await openBox(lazy);
   final entries = <String, dynamic>{};
   for (var i = 0; i < amount; i++) {
     entries['string$i'] = 'test';
     entries['int$i'] = -i;
-    entries['bool$i'] = i % 2 == 0;
+    entries['bool$i'] = i.isEven;
     entries['null$i'] = null;
   }
   await box.putAll(entries);
@@ -36,13 +35,9 @@ Future _performTest(bool lazy) async {
 }
 
 void main() {
-  group(
-    'delete many entries',
-    () {
-      test('normal box', () => _performTest(false));
+  group('delete many entries', () {
+    test('normal box', () => _performTest(false));
 
-      test('lazy box', () => _performTest(true));
-    },
-    timeout: longTimeout,
-  );
+    test('lazy box', () => _performTest(true));
+  }, timeout: longTimeout);
 }

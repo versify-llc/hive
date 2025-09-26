@@ -36,7 +36,7 @@ _BoxBaseMock _openBoxBaseMock({
     hive,
     name,
     null,
-    cStrategy ?? (_, __) => false,
+    cStrategy ?? (_, _) => false,
     backend,
   );
   mock.keystore = keystore ?? Keystore(mock, ChangeNotifier(), null);
@@ -93,10 +93,7 @@ void main() {
 
       test('non empty box', () {
         final keystore = Keystore.debug(
-          frames: [
-            Frame('key1', null),
-            Frame('key2', null),
-          ],
+          frames: [Frame('key1', null), Frame('key2', null)],
         );
         final box = _openBoxBaseMock(keystore: keystore);
         expect(box.length, 2);
@@ -120,7 +117,9 @@ void main() {
       test('calls keystore.watch()', () {
         final keystore = MockKeystore();
         final box = _openBoxBaseMock(keystore: keystore);
-        when(() => keystore.watch(key: 123)).thenAnswer((_) => Stream.empty());
+        when(
+          () => keystore.watch(key: 123),
+        ).thenAnswer((_) => const Stream.empty());
 
         box.watch(key: 123);
         verify(() => keystore.watch(key: 123));
@@ -301,10 +300,7 @@ void main() {
         final box = _openBoxBaseMock(backend: backend, keystore: keystore);
 
         expect(await box.clear(), 2);
-        verifyInOrder([
-          backend.clear,
-          keystore.clear,
-        ]);
+        verifyInOrder([backend.clear, keystore.clear]);
       });
 
       test('throws if box is closed', () async {
@@ -343,8 +339,9 @@ void main() {
         final backend = MockStorageBackend();
         final keystore = MockKeystore();
 
-        when(() => keystore.frames)
-            .thenReturn([Frame('key', 1, length: 22, offset: 33)]);
+        when(
+          () => keystore.frames,
+        ).thenReturn([Frame('key', 1, length: 22, offset: 33)]);
         when(() => backend.supportsCompaction).thenReturn(true);
         // In case it is 0, we will bail out before compaction
         when(() => keystore.deletedEntries).thenReturn(1);

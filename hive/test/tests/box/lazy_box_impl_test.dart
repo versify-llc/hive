@@ -59,12 +59,7 @@ void main() {
     });
 
     test('.getAt()', () async {
-      final keystore = Keystore.debug(
-        frames: [
-          Frame.lazy(0),
-          Frame.lazy('a'),
-        ],
-      );
+      final keystore = Keystore.debug(frames: [Frame.lazy(0), Frame.lazy('a')]);
       final backend = MockStorageBackend();
       when(() => backend.readValue(any())).thenAnswer((i) {
         return Future.value('A');
@@ -83,17 +78,14 @@ void main() {
         when(() => keystore.length).thenReturn(-1);
         when(() => keystore.deletedEntries).thenReturn(-1);
 
-        final box = _getBox(
-          backend: backend,
-          keystore: keystore,
-        );
+        final box = _getBox(backend: backend, keystore: keystore);
 
         await box.putAll({'key1': 'value1', 'key2': 'value2'});
         verifyInOrder([
           () => backend.writeFrames([
-                Frame('key1', 'value1'),
-                Frame('key2', 'value2'),
-              ]),
+            Frame('key1', 'value1'),
+            Frame('key2', 'value2'),
+          ]),
           () => keystore.insert(Frame('key1', 'value1'), lazy: true),
           () => keystore.insert(Frame('key2', 'value2'), lazy: true),
         ]);
@@ -102,20 +94,15 @@ void main() {
       test('handles exceptions', () async {
         final backend = MockStorageBackend();
         final keystore = MockKeystore();
-        final theError = 'Some error';
+        const theError = 'Some error';
 
         when(() => backend.writeFrames(any())).thenThrow(theError);
         when(() => keystore.containsKey(any())).thenReturn(true);
 
-        final box = _getBox(
-          backend: backend,
-          keystore: keystore,
-        );
+        final box = _getBox(backend: backend, keystore: keystore);
 
         await expectLater(
-          () async => await box.putAll(
-            {'key1': 'value1', 'key2': 'value2'},
-          ),
+          () async => await box.putAll({'key1': 'value1', 'key2': 'value2'}),
           throwsA(theError),
         );
         verify(
@@ -133,10 +120,7 @@ void main() {
         final backend = MockStorageBackend();
         final keystore = MockKeystore();
         when(() => keystore.containsKey(any())).thenReturn(false);
-        final box = _getBox(
-          backend: backend,
-          keystore: keystore,
-        );
+        final box = _getBox(backend: backend, keystore: keystore);
 
         await box.deleteAll(['key1', 'key2', 'key3']);
         verifyZeroInteractions(backend);
@@ -150,17 +134,16 @@ void main() {
         when(() => keystore.length).thenReturn(-1);
         when(() => keystore.deletedEntries).thenReturn(-1);
 
-        final box = _getBox(
-          backend: backend,
-          keystore: keystore,
-        );
+        final box = _getBox(backend: backend, keystore: keystore);
 
         await box.deleteAll(['key1', 'key2']);
         verifyInOrder([
           () => keystore.containsKey('key1'),
           () => keystore.containsKey('key2'),
-          () => backend
-              .writeFrames([Frame.deleted('key1'), Frame.deleted('key2')]),
+          () => backend.writeFrames([
+            Frame.deleted('key1'),
+            Frame.deleted('key2'),
+          ]),
           () => keystore.insert(Frame.deleted('key1')),
           () => keystore.insert(Frame.deleted('key2')),
         ]);

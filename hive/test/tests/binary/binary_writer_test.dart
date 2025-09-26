@@ -247,17 +247,49 @@ void main() {
 
       bw = getWriter();
       bw.writeIntList([1, 2]);
-      expect(
-        bw.toBytes(),
-        [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 240, 63, 0, 0, 0, 0, 0, 0, 0, 64],
-      );
+      expect(bw.toBytes(), [
+        2,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        240,
+        63,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        64,
+      ]);
 
       bw = getWriter();
       bw.writeIntList([1, 2], writeLength: false);
-      expect(
-        bw.toBytes(),
-        [0, 0, 0, 0, 0, 0, 240, 63, 0, 0, 0, 0, 0, 0, 0, 64],
-      );
+      expect(bw.toBytes(), [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        240,
+        63,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        64,
+      ]);
     });
 
     test('.writeDoubleList()', () {
@@ -414,7 +446,7 @@ void main() {
         expect(bw.toBytes(), []);
 
         bw = getWriter();
-        bw.write(null, writeTypeId: true);
+        bw.write(null);
         expect(bw.toBytes(), [FrameValueType.nullT]);
       });
 
@@ -426,7 +458,7 @@ void main() {
         expect(bw.toBytes(), bytes(bd));
 
         bw = getWriter();
-        bw.write(12345, writeTypeId: true);
+        bw.write(12345);
         expect(bw.toBytes(), [FrameValueType.intT, ...bytes(bd)]);
       });
 
@@ -438,7 +470,7 @@ void main() {
         expect(bw.toBytes(), bytes(bd));
 
         bw = getWriter();
-        bw.write(123.456, writeTypeId: true);
+        bw.write(123.456);
         expect(bw.toBytes(), [FrameValueType.doubleT, ...bytes(bd)]);
       });
 
@@ -448,7 +480,7 @@ void main() {
         expect(bw.toBytes(), [1]);
 
         bw = getWriter();
-        bw.write(true, writeTypeId: true);
+        bw.write(true);
         expect(bw.toBytes(), [FrameValueType.boolT, 1]);
       });
 
@@ -458,7 +490,7 @@ void main() {
         expect(bw.toBytes(), [2, 0, 0, 0, 0x68, 0x69]);
 
         bw = getWriter();
-        bw.write('hi', writeTypeId: true);
+        bw.write('hi');
         expect(bw.toBytes(), [FrameValueType.stringT, 2, 0, 0, 0, 0x68, 0x69]);
       });
 
@@ -484,11 +516,18 @@ void main() {
         expect(bw.toBytes(), [4, 0, 0, 0, 1, 2, 3, 4]);
 
         bw = getWriter();
-        bw.write(Uint8List.fromList([1, 2, 3, 4]), writeTypeId: true);
-        expect(
-          bw.toBytes(),
-          [FrameValueType.byteListT, 4, 0, 0, 0, 1, 2, 3, 4],
-        );
+        bw.write(Uint8List.fromList([1, 2, 3, 4]));
+        expect(bw.toBytes(), [
+          FrameValueType.byteListT,
+          4,
+          0,
+          0,
+          0,
+          1,
+          2,
+          3,
+          4,
+        ]);
       });
 
       test('int list', () {
@@ -502,7 +541,7 @@ void main() {
         expect(bw.toBytes(), bytes(bd));
 
         bw = getWriter();
-        bw.write([123, 45], writeTypeId: true);
+        bw.write([123, 45]);
         expect(bw.toBytes(), [FrameValueType.intListT, ...bytes(bd)]);
       });
 
@@ -517,7 +556,7 @@ void main() {
         expect(bw.toBytes(), bytes(bd));
 
         bw = getWriter();
-        bw.write([123.456, 456.321], writeTypeId: true);
+        bw.write([123.456, 456.321]);
         expect(bw.toBytes(), [FrameValueType.doubleListT, ...bytes(bd)]);
       });
 
@@ -532,7 +571,7 @@ void main() {
         expect(bw.toBytes(), bytes(bd));
 
         bw = getWriter();
-        bw.write([false, true], writeTypeId: true);
+        bw.write([false, true]);
         expect(bw.toBytes(), [FrameValueType.boolListT, ...bytes(bd)]);
       });
 
@@ -546,7 +585,7 @@ void main() {
         ]);
 
         bw = getWriter();
-        bw.write(['h', 'hi'], writeTypeId: true);
+        bw.write(['h', 'hi']);
         expect(bw.toBytes(), [
           FrameValueType.stringListT, 2, 0, 0, 0, //
           1, 0, 0, 0, 0x68, //
@@ -568,7 +607,7 @@ void main() {
         expect(bw.toBytes(), bytes(bd));
 
         bw = getWriter();
-        bw.write([123, 45, null], writeTypeId: true);
+        bw.write([123, 45, null]);
         expect(bw.toBytes(), [FrameValueType.listT, ...bytes(bd)]);
       });
     });

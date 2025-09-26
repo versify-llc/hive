@@ -26,7 +26,7 @@ class _FrameIoHelperTest extends FrameIoHelper {
 
   @override
   Future<RandomAccessFile> openFile(String path) async {
-    return getTempRaf(bytes);
+    return await getTempRaf(bytes);
   }
 
   @override
@@ -41,8 +41,11 @@ void main() {
       test('frame', () async {
         final keystore = Keystore.debug();
         final ioHelper = _FrameIoHelperTest(_getBytes(frameBytes));
-        final recoveryOffset =
-            await ioHelper.keysFromFile('null', keystore, null);
+        final recoveryOffset = await ioHelper.keysFromFile(
+          'null',
+          keystore,
+          null,
+        );
         expect(recoveryOffset, -1);
 
         final testKeystore = Keystore.debug(
@@ -55,8 +58,11 @@ void main() {
       test('encrypted', () async {
         final keystore = Keystore.debug();
         final ioHelper = _FrameIoHelperTest(_getBytes(frameBytesEncrypted));
-        final recoveryOffset =
-            await ioHelper.keysFromFile('null', keystore, testCipher);
+        final recoveryOffset = await ioHelper.keysFromFile(
+          'null',
+          keystore,
+          testCipher,
+        );
         expect(recoveryOffset, -1);
 
         final testKeystore = Keystore.debug(
@@ -68,15 +74,19 @@ void main() {
         expectFrames(keystore.frames, testKeystore.frames);
       });
 
-      test('returns offset if problem occurs', () async {});
+      test('returns offset if problem occurs', () {});
     });
 
     group('.allFromFile()', () {
       test('frame', () async {
         final keystore = Keystore.debug();
         final ioHelper = _FrameIoHelperTest(_getBytes(frameBytes));
-        final recoveryOffset =
-            await ioHelper.framesFromFile('null', keystore, testRegistry, null);
+        final recoveryOffset = await ioHelper.framesFromFile(
+          'null',
+          keystore,
+          testRegistry,
+          null,
+        );
         expect(recoveryOffset, -1);
 
         final testKeystore = Keystore.debug(
@@ -104,7 +114,7 @@ void main() {
         expectFrames(keystore.frames, testKeystore.frames);
       });
 
-      test('returns offset if problem occurs', () async {});
+      test('returns offset if problem occurs', () {});
     });
   });
 }

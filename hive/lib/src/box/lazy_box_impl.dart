@@ -62,7 +62,7 @@ class LazyBoxImpl<E> extends BoxBaseImpl<E> implements LazyBox<E> {
 
     for (final frame in frames) {
       if (frame.value is HiveObjectMixin) {
-        (frame.value as HiveObjectMixin).init(frame.key, this);
+        (frame.value as HiveObjectMixin?)?.init(frame.key, this);
       }
       keystore.insert(frame, lazy: true);
     }

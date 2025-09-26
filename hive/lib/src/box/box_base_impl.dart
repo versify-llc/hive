@@ -202,10 +202,10 @@ class _NullBoxBase<E> implements BoxBase<E> {
   Never compact() => throw UnimplementedError();
 
   @override
-  Never containsKey(key) => throw UnimplementedError();
+  Never containsKey(dynamic key) => throw UnimplementedError();
 
   @override
-  Never delete(key) => throw UnimplementedError();
+  Never delete(dynamic key) => throw UnimplementedError();
 
   @override
   Never deleteAll(Iterable keys) => throw UnimplementedError();
@@ -244,7 +244,7 @@ class _NullBoxBase<E> implements BoxBase<E> {
   Never get path => throw UnimplementedError();
 
   @override
-  Never put(key, E value) => throw UnimplementedError();
+  Never put(dynamic key, E value) => throw UnimplementedError();
 
   @override
   Never putAll(Map<dynamic, E> entries) => throw UnimplementedError();
@@ -253,7 +253,7 @@ class _NullBoxBase<E> implements BoxBase<E> {
   Never putAt(int index, E value) => throw UnimplementedError();
 
   @override
-  Never watch({key}) => throw UnimplementedError();
+  Never watch({dynamic key}) => throw UnimplementedError();
 
   @override
   Never flush() => throw UnimplementedError();

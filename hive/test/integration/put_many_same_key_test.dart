@@ -2,11 +2,10 @@ import 'dart:async';
 
 import 'package:test/test.dart';
 
-import '../util/is_browser.dart';
 import 'integration.dart';
 
 Future _performTest(bool lazy) async {
-  final amount = isBrowser ? 5 : 100;
+  const amount = 100;
   var box = await openBox(lazy);
 
   for (var i = 0; i < amount; i++) {
@@ -15,12 +14,12 @@ Future _performTest(bool lazy) async {
       scheduleMicrotask(() async {
         await box.put('string$i', 'test$n');
         await box.put('int$i', n);
-        await box.put('bool$i', n % 2 == 0);
+        await box.put('bool$i', n.isEven);
         await box.put('null$i', null);
 
         expect(await await box.get('string$i'), 'test$n');
         expect(await await box.get('int$i'), n);
-        expect(await await box.get('bool$i'), n % 2 == 0);
+        expect(await await box.get('bool$i'), n.isEven);
         expect(await await box.get('null$i', defaultValue: 0), null);
 
         completer.complete();
@@ -40,13 +39,9 @@ Future _performTest(bool lazy) async {
 }
 
 void main() {
-  group(
-    'put many entries with the same key',
-    () {
-      test('normal box', () => _performTest(false));
+  group('put many entries with the same key', () {
+    test('normal box', () => _performTest(false));
 
-      test('lazy box', () => _performTest(true));
-    },
-    timeout: longTimeout,
-  );
+    test('lazy box', () => _performTest(true));
+  }, timeout: longTimeout);
 }

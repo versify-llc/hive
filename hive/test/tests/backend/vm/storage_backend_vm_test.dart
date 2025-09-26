@@ -18,15 +18,6 @@ import '../../common.dart';
 import '../../frames.dart';
 import '../../mocks.dart';
 
-const testMap = {
-  'SomeKey': 123,
-  'AnotherKey': ['Just', 456, 'a', 333, 'List'],
-  'Random Double list': [1.0, 2.0, 10.0, double.infinity],
-  'Unicode:': '👋',
-  'Null': null,
-  'LastKey': true,
-};
-
 Uint8List getFrameBytes(Iterable<Frame> frames) {
   final writer = BinaryWriterImpl(testRegistry);
   for (final frame in frames) {
@@ -86,8 +77,9 @@ void main() {
         final readRaf = MockRandomAccessFile();
         final writeRaf = MockRandomAccessFile();
         when(file.open).thenAnswer((i) => Future.value(readRaf));
-        when(() => file.open(mode: FileMode.writeOnlyAppend))
-            .thenAnswer((i) => Future.value(writeRaf));
+        when(
+          () => file.open(mode: FileMode.writeOnlyAppend),
+        ).thenAnswer((i) => Future.value(writeRaf));
         when(writeRaf.length).thenAnswer((_) => Future.value(0));
 
         final backend = _getBackend(file: file);
@@ -100,8 +92,9 @@ void main() {
         final file = MockFile();
         final writeFile = MockRandomAccessFile();
         final readRaf = MockRandomAccessFile();
-        when(() => file.open(mode: FileMode.writeOnlyAppend))
-            .thenAnswer((i) => Future.value(writeFile));
+        when(
+          () => file.open(mode: FileMode.writeOnlyAppend),
+        ).thenAnswer((i) => Future.value(writeFile));
         when(file.open).thenAnswer((i) => Future.value(readRaf));
         when(writeFile.length).thenAnswer((i) => Future.value(123));
 
@@ -114,27 +107,19 @@ void main() {
     group('.initialize()', () {
       File getLockFile() {
         final lockMockFile = MockFile();
-        when(() => lockMockFile.open(mode: FileMode.write))
-            .thenAnswer((i) => Future.value(MockRandomAccessFile()));
+        when(
+          () => lockMockFile.open(mode: FileMode.write),
+        ).thenAnswer((i) => Future.value(MockRandomAccessFile()));
         return lockMockFile;
       }
 
       FrameIoHelper getFrameIoHelper(int recoveryOffset) {
         final helper = MockFrameIoHelper();
         when(
-          () => helper.framesFromFile(
-            any(),
-            any(),
-            any(),
-            any(),
-          ),
+          () => helper.framesFromFile(any(), any(), any(), any()),
         ).thenAnswer((i) => Future.value(recoveryOffset));
         when(
-          () => helper.keysFromFile(
-            any(),
-            any(),
-            any(),
-          ),
+          () => helper.keysFromFile(any(), any(), any()),
         ).thenAnswer((i) => Future.value(recoveryOffset));
         return helper;
       }
@@ -143,8 +128,9 @@ void main() {
         test('opens lock file and acquires lock', () async {
           final lockFile = MockFile();
           final lockRaf = MockRandomAccessFile();
-          when(() => lockFile.open(mode: FileMode.write))
-              .thenAnswer((i) => Future.value(lockRaf));
+          when(
+            () => lockFile.open(mode: FileMode.write),
+          ).thenAnswer((i) => Future.value(lockRaf));
           when(lockRaf.lock).thenAnswer((i) => Future.value(lockRaf));
 
           final backend = _getBackend(
@@ -173,13 +159,16 @@ void main() {
             writeRaf: writeRaf,
           );
           when(() => backend.path).thenReturn('nullPath');
-          when(() => lockFile.open(mode: FileMode.write))
-              .thenAnswer((i) => Future.value(lockRaf));
+          when(
+            () => lockFile.open(mode: FileMode.write),
+          ).thenAnswer((i) => Future.value(lockRaf));
           when(lockRaf.lock).thenAnswer((i) => Future.value(lockRaf));
-          when(() => writeRaf.truncate(20))
-              .thenAnswer((i) => Future.value(writeRaf));
-          when(() => writeRaf.setPosition(20))
-              .thenAnswer((i) => Future.value(writeRaf));
+          when(
+            () => writeRaf.truncate(20),
+          ).thenAnswer((i) => Future.value(writeRaf));
+          when(
+            () => writeRaf.setPosition(20),
+          ).thenAnswer((i) => Future.value(writeRaf));
 
           await backend.initialize(
             TypeRegistryImpl.nullImpl,
@@ -197,11 +186,11 @@ void main() {
           final backend = _getBackend(
             lockFile: lockFile,
             ioHelper: getFrameIoHelper(20),
-            crashRecovery: false,
           );
           when(() => backend.path).thenReturn('nullPath');
-          when(() => lockFile.open(mode: FileMode.write))
-              .thenAnswer((i) => Future.value(lockRaf));
+          when(
+            () => lockFile.open(mode: FileMode.write),
+          ).thenAnswer((i) => Future.value(lockRaf));
           when(lockRaf.lock).thenAnswer((i) => Future.value(lockRaf));
 
           await expectLater(
@@ -266,10 +255,12 @@ void main() {
         final bytes = getFrameBytes(frames);
 
         final writeRaf = MockRandomAccessFile();
-        when(() => writeRaf.setPosition(0))
-            .thenAnswer((i) => Future.value(writeRaf));
-        when(() => writeRaf.writeFrom(bytes))
-            .thenAnswer((i) => Future.value(writeRaf));
+        when(
+          () => writeRaf.setPosition(0),
+        ).thenAnswer((i) => Future.value(writeRaf));
+        when(
+          () => writeRaf.writeFrom(bytes),
+        ).thenAnswer((i) => Future.value(writeRaf));
 
         final backend = _getBackend(writeRaf: writeRaf)
           // The registry needs to be initialized before writing values, and
@@ -285,10 +276,12 @@ void main() {
         final frames = [Frame('key1', 'value'), Frame('key2', null)];
 
         final writeRaf = MockRandomAccessFile();
-        when(() => writeRaf.setPosition(5))
-            .thenAnswer((i) => Future.value(writeRaf));
-        when(() => writeRaf.writeFrom(any()))
-            .thenAnswer((i) => Future.value(writeRaf));
+        when(
+          () => writeRaf.setPosition(5),
+        ).thenAnswer((i) => Future.value(writeRaf));
+        when(
+          () => writeRaf.writeFrom(any()),
+        ).thenAnswer((i) => Future.value(writeRaf));
 
         final backend = _getBackend(writeRaf: writeRaf)
           // The registry needs to be initialized before writing values, and
@@ -326,10 +319,12 @@ void main() {
 
     test('.clear()', () async {
       final writeRaf = MockRandomAccessFile();
-      when(() => writeRaf.truncate(0))
-          .thenAnswer((i) => Future.value(writeRaf));
-      when(() => writeRaf.setPosition(0))
-          .thenAnswer((i) => Future.value(writeRaf));
+      when(
+        () => writeRaf.truncate(0),
+      ).thenAnswer((i) => Future.value(writeRaf));
+      when(
+        () => writeRaf.setPosition(0),
+      ).thenAnswer((i) => Future.value(writeRaf));
       final backend = _getBackend(writeRaf: writeRaf);
       backend.writeOffset = 111;
 

@@ -22,27 +22,24 @@ class Frame {
 
   /// Not part of public API
   Frame(this.key, this.value, {this.length, this.offset = -1})
-      : lazy = false,
-        deleted = false {
-    assert(assertKey(key));
-  }
+    : lazy = false,
+      deleted = false,
+      assert(assertKey(key));
 
   /// Not part of public API
   Frame.deleted(this.key, {this.length})
-      : value = null,
-        lazy = false,
-        deleted = true,
-        offset = -1 {
-    assert(assertKey(key));
-  }
+    : value = null,
+      lazy = false,
+      deleted = true,
+      offset = -1,
+      assert(assertKey(key));
 
   /// Not part of public API
   Frame.lazy(this.key, {this.length, this.offset = -1})
-      : value = null,
-        lazy = true,
-        deleted = false {
-    assert(assertKey(key));
-  }
+    : value = null,
+      lazy = true,
+      deleted = false,
+      assert(assertKey(key));
 
   /// Not part of public API
   static bool assertKey(dynamic key) {
@@ -64,11 +61,7 @@ class Frame {
   /// Not part of public API
   Frame toLazy() {
     if (deleted) return this;
-    return Frame.lazy(
-      key,
-      length: length,
-      offset: offset,
-    );
+    return Frame.lazy(key, length: length, offset: offset);
   }
 
   @override
@@ -133,24 +126,24 @@ class FrameValueType {
   /// Uint8List
   static const byteListT = 5;
 
-  /// List<int>
+  /// `List<int>`
   static const intListT = 6;
 
-  /// List<double>
+  /// `List<double>`
   static const doubleListT = 7;
 
-  /// List<bool>
+  /// `List<bool>`
   static const boolListT = 8;
 
-  /// List<String>
+  /// `List<String>`
   static const stringListT = 9;
 
-  /// List<dynamic>
+  /// `List<dynamic>`
   static const listT = 10;
 
-  /// Map<dynamic, dynamic>
+  /// `Map<dynamic, dynamic>`
   static const mapT = 11;
 
-  /// List<HiveObject>
+  /// `List<HiveObject>`
   static const hiveListT = 12;
 }

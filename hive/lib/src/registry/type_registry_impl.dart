@@ -28,7 +28,7 @@ class _NullTypeRegistry implements TypeRegistryImpl {
   Never findAdapterForTypeId(int typeId) => throw UnimplementedError();
 
   @override
-  Never findAdapterForValue(value) => throw UnimplementedError();
+  Never findAdapterForValue(dynamic value) => throw UnimplementedError();
 
   @override
   Never ignoreTypeId<T>(int typeId) => throw UnimplementedError();
@@ -42,8 +42,7 @@ class _NullTypeRegistry implements TypeRegistryImpl {
     TypeAdapter<T> adapter, {
     bool internal = false,
     bool override = false,
-  }) =>
-      throw UnimplementedError();
+  }) => throw UnimplementedError();
 
   @override
   Never resetAdapters() => throw UnimplementedError();
@@ -106,15 +105,17 @@ class TypeRegistryImpl implements TypeRegistry {
       if (oldAdapter != null) {
         if (override) {
           print(
-            'You are trying to override ${oldAdapter.runtimeType.toString()}'
-            'with ${adapter.runtimeType.toString()} for typeId: '
+            'You are trying to override ${oldAdapter.runtimeType}'
+            'with ${adapter.runtimeType} for typeId: '
             '${adapter.typeId}. Please note that overriding adapters might '
             'cause weird errors. Try to avoid overriding adapters unless not '
             'required.',
           );
         } else {
-          throw HiveError('There is already a TypeAdapter for '
-              'typeId ${typeId - reservedTypeIds}.');
+          throw HiveError(
+            'There is already a TypeAdapter for '
+            'typeId ${typeId - reservedTypeIds}.',
+          );
         }
       }
     }

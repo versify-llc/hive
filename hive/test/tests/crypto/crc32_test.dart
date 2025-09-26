@@ -6,15 +6,15 @@ import 'package:test/test.dart';
 void main() {
   group('Crc32', () {
     test('compute', () {
-      expect(Crc32.compute(Uint8List(0)), equals(0));
+      expect(crc32Compute(Uint8List(0)), equals(0));
       expect(
-        Crc32.compute(Uint8List.fromList('123456789'.codeUnits)),
+        crc32Compute(Uint8List.fromList('123456789'.codeUnits)),
         0xcbf43926,
       );
 
-      final crc = Crc32.compute(Uint8List.fromList('12345'.codeUnits));
+      final crc = crc32Compute(Uint8List.fromList('12345'.codeUnits));
       expect(
-        Crc32.compute(Uint8List.fromList('6789'.codeUnits), crc: crc),
+        crc32Compute(Uint8List.fromList('6789'.codeUnits), crc: crc),
         equals(0xcbf43926),
       );
     });

@@ -8,14 +8,14 @@ void main() {
   group('IgnoredTypeAdapter', () {
     test('.read()', () {
       final binaryReader = MockBinaryReader();
-      final value = IgnoredTypeAdapter().read(binaryReader);
+      final value = const IgnoredTypeAdapter().read(binaryReader);
       verifyNever(binaryReader.read);
       expect(value, null);
     });
 
     test('.write()', () {
       final binaryWriter = MockBinaryWriter();
-      IgnoredTypeAdapter().write(binaryWriter, 42);
+      const IgnoredTypeAdapter().write(binaryWriter, 42);
       verifyNever(() => binaryWriter.writeInt(42));
     });
   });
