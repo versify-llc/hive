@@ -1,47 +1,52 @@
 import 'dart:async';
-import 'dart:html';
-import 'dart:indexed_db';
-import 'dart:js' as js;
+import 'dart:js_interop';
 import 'package:hive/hive.dart';
 import 'package:hive/src/backend/js/native/storage_backend_js.dart';
+import 'package:hive/src/backend/js/native/utils.dart';
 import 'package:hive/src/backend/storage_backend.dart';
+import 'package:web/web.dart';
 
 /// Opens IndexedDB databases
 class BackendManager implements BackendManagerInterface {
-  IdbFactory? get indexedDB => js.context.hasProperty('window')
-      ? window.indexedDB
-      : WorkerGlobalScope.instance.indexedDB;
+  IDBFactory? get indexedDB => window.self.indexedDB;
 
   @override
-  Future<StorageBackend> open(String name, String? path, bool crashRecovery,
-      HiveCipher? cipher, String? collection) async {
+  Future<StorageBackend> open(
+    String name,
+    String? path,
+    bool crashRecovery,
+    HiveCipher? cipher,
+    String? collection,
+  ) async {
     // compatibility for old store format
     final databaseName = collection ?? name;
     final objectStoreName = collection == null ? 'box' : name;
 
-    var db =
-        await indexedDB!.open(databaseName, version: 1, onUpgradeNeeded: (e) {
-      var db = e.target.result as Database;
-      if (!(db.objectStoreNames ?? []).contains(objectStoreName)) {
+    final request = indexedDB!.open(databaseName, 1);
+    // ignore: avoid_types_on_closure_parameters
+    request.onupgradeneeded = (IDBVersionChangeEvent e) {
+      final db = (e.target as IDBOpenDBRequest).result as IDBDatabase;
+      if (!db.objectStoreNames.contains(objectStoreName)) {
         db.createObjectStore(objectStoreName);
       }
-    });
+    }.toJS;
+    var db = await request.asFuture<IDBDatabase>();
 
     // in case the objectStore is not contained, re-open the db and
     // update version
-    if (!(db.objectStoreNames ?? []).contains(objectStoreName)) {
+    if (!db.objectStoreNames.contains(objectStoreName)) {
       print(
-          'Creating objectStore $objectStoreName in database $databaseName...');
-      db = await indexedDB!.open(
-        databaseName,
-        version: (db.version ?? 1) + 1,
-        onUpgradeNeeded: (e) {
-          var db = e.target.result as Database;
-          if (!(db.objectStoreNames ?? []).contains(objectStoreName)) {
-            db.createObjectStore(objectStoreName);
-          }
-        },
+        'Creating objectStore $objectStoreName in database $databaseName...',
       );
+      final request = indexedDB!.open(databaseName, db.version + 1);
+      // ignore: avoid_types_on_closure_parameters
+      request.onupgradeneeded = (IDBVersionChangeEvent e) {
+        final db = (e.target as IDBOpenDBRequest).result as IDBDatabase;
+        if (!db.objectStoreNames.contains(objectStoreName)) {
+          db.createObjectStore(objectStoreName);
+        }
+      }.toJS;
+      db = await request.asFuture<IDBDatabase>();
     }
 
     print('Got object store $objectStoreName in database $databaseName.');
@@ -59,17 +64,19 @@ class BackendManager implements BackendManagerInterface {
 
     // directly deleting the entire DB if a non-collection Box
     if (collection == null) {
-      await indexedDB!.deleteDatabase(databaseName);
+      await indexedDB!.deleteDatabase(databaseName).asFuture();
     } else {
-      final db =
-          await indexedDB!.open(databaseName, version: 1, onUpgradeNeeded: (e) {
-        var db = e.target.result as Database;
-        if ((db.objectStoreNames ?? []).contains(objectStoreName)) {
+      final request = indexedDB!.open(databaseName, 1);
+      // ignore: avoid_types_on_closure_parameters
+      request.onupgradeneeded = (IDBVersionChangeEvent e) {
+        final db = (e.target as IDBOpenDBRequest).result as IDBDatabase;
+        if (db.objectStoreNames.contains(objectStoreName)) {
           db.deleteObjectStore(objectStoreName);
         }
-      });
-      if ((db.objectStoreNames ?? []).isEmpty) {
-        indexedDB!.deleteDatabase(databaseName);
+      }.toJS;
+      final db = await request.asFuture<IDBDatabase>();
+      if (db.objectStoreNames.length == 0) {
+        await indexedDB!.deleteDatabase(databaseName).asFuture();
       }
     }
   }
@@ -81,21 +88,26 @@ class BackendManager implements BackendManagerInterface {
     final objectStoreName = collection == null ? 'box' : name;
     // https://stackoverflow.com/a/17473952
     try {
-      var _exists = true;
+      var exists = true;
       if (collection == null) {
-        await indexedDB!.open(databaseName, version: 1, onUpgradeNeeded: (e) {
-          e.target.transaction!.abort();
-          _exists = false;
-        });
+        final request = indexedDB!.open(databaseName, 1);
+        // ignore: avoid_types_on_closure_parameters
+        request.onupgradeneeded = (IDBVersionChangeEvent e) {
+          (e.target as IDBOpenDBRequest).transaction!.abort();
+          exists = false;
+        }.toJS;
+        await request.asFuture();
       } else {
-        final db =
-            await indexedDB!.open(collection, version: 1, onUpgradeNeeded: (e) {
-          var db = e.target.result as Database;
-          _exists = (db.objectStoreNames ?? []).contains(objectStoreName);
-        });
-        _exists = (db.objectStoreNames ?? []).contains(objectStoreName);
+        final request = indexedDB!.open(collection, 1);
+        // ignore: avoid_types_on_closure_parameters
+        request.onupgradeneeded = (IDBVersionChangeEvent e) {
+          final db = (e.target as IDBOpenDBRequest).result as IDBDatabase;
+          exists = db.objectStoreNames.contains(objectStoreName);
+        }.toJS;
+        final db = await request.asFuture<IDBDatabase>();
+        exists = db.objectStoreNames.contains(objectStoreName);
       }
-      return _exists;
+      return exists;
     } catch (error) {
       return false;
     }

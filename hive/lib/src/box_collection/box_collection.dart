@@ -4,7 +4,8 @@ import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:hive/hive.dart';
 
-import 'box_collection_stub.dart' as implementation;
+import 'package:hive/src/box_collection/box_collection_stub.dart'
+    as implementation;
 
 class BoxCollection implements implementation.BoxCollection {
   @override
@@ -39,13 +40,15 @@ class BoxCollection implements implementation.BoxCollection {
   }
 
   @override
-  Future<CollectionBox<V>> openBox<V>(String name,
-      {bool preload = false,
-      implementation.CollectionBox<V> Function(String, BoxCollection)?
-          boxCreator}) async {
+  Future<CollectionBox<V>> openBox<V>(
+    String name, {
+    bool preload = false,
+    implementation.CollectionBox<V> Function(String, BoxCollection)? boxCreator,
+  }) async {
     if (!boxNames.contains(name)) {
       throw Exception(
-          'Box with name $name is not in the known box names of this collection.');
+        'Box with name $name is not in the known box names of this collection.',
+      );
     }
     final i = _openBoxes.indexWhere((box) => box.name == name);
     if (i != -1) {
@@ -123,18 +126,7 @@ class CollectionBox<V> implements implementation.CollectionBox<V> {
     );
   }
 
-  CollectionBox(this.name, this.boxCollection) {
-    if (!(V is String ||
-        V is bool ||
-        V is int ||
-        V is Object ||
-        V is List<Object?> ||
-        V is Map<String, Object?> ||
-        V is double)) {
-      throw Exception(
-          'Value type ${V.runtimeType} is not one of the allowed value types {String, int, double, List<Object?>, Map<String, Object?>}.');
-    }
-  }
+  CollectionBox(this.name, this.boxCollection);
 
   @override
   Future<List<String>> getAllKeys() async {
@@ -159,7 +151,7 @@ class CollectionBox<V> implements implementation.CollectionBox<V> {
       final values = await Future.wait(keys.map(box.get));
       return {
         for (var i = 0; i < values.length; i++)
-          Uri.decodeComponent(keys[i] as String): values[i] as V
+          Uri.decodeComponent(keys[i] as String): values[i] as V,
       };
     }
     return (box as Box)
@@ -231,7 +223,7 @@ class CollectionBox<V> implements implementation.CollectionBox<V> {
     // other stuff while the flusing is still in progress. Fortunately, hive has
     // a proper read / write queue, meaning that if we do actually want to write
     // something again, it'll wait until the flush is completed.
-    box.flush();
+    unawaited(box.flush());
   }
 
   Future<void> _flushOrMark() async {

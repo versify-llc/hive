@@ -6,12 +6,12 @@ import '../util/is_browser.dart';
 import 'integration.dart';
 
 Future _performTest(bool lazy) async {
-  var amount = isBrowser ? 5 : 100;
+  final amount = isBrowser ? 5 : 100;
   var box = await openBox(lazy);
 
   for (var i = 0; i < amount; i++) {
     for (var n = 0; n < 100; n++) {
-      var completer = Completer();
+      final completer = Completer();
       scheduleMicrotask(() async {
         await box.put('string$i', 'test$n');
         await box.put('int$i', n);
@@ -40,9 +40,13 @@ Future _performTest(bool lazy) async {
 }
 
 void main() {
-  group('put many entries with the same key', () {
-    test('normal box', () => _performTest(false));
+  group(
+    'put many entries with the same key',
+    () {
+      test('normal box', () => _performTest(false));
 
-    test('lazy box', () => _performTest(true));
-  }, timeout: longTimeout);
+      test('lazy box', () => _performTest(true));
+    },
+    timeout: longTimeout,
+  );
 }

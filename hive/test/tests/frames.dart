@@ -38,8 +38,10 @@ List<Frame> get testFrames => <Frame>[
       Frame('Bool true', true),
       Frame('Bool false', false),
       Frame('Float', 12312.991283),
-      Frame('Unicode string',
-          'A few characters which are not ASCII: 🇵🇬 😀 🐝 걟 ＄ 乽 👨‍🚀'),
+      Frame(
+        'Unicode string',
+        'A few characters which are not ASCII: 🇵🇬 😀 🐝 걟 ＄ 乽 👨‍🚀',
+      ),
       Frame('Empty list', []),
       Frame('Byte list', Uint8List.fromList([1, 12, 123, 1234])),
       Frame('Byte list with mask', Uint8List.fromList([0x90, 0xA9, 1, 2, 3])),
@@ -50,7 +52,7 @@ List<Frame> get testFrames => <Frame>[
         double.infinity,
         double.maxFinite,
         double.minPositive,
-        double.negativeInfinity
+        double.negativeInfinity,
       ]),
       Frame('String list', [
         'hello',
@@ -58,7 +60,7 @@ List<Frame> get testFrames => <Frame>[
         ' ﻬ ﻭ ﻮ ﻯ ﻰ ﻱ',
         'അ ആ ഇ ',
         ' צּ קּ רּ שּ ',
-        'ｩ ｪ ｫ ｬ ｭ ｮ ｯ ｰ '
+        'ｩ ｪ ｫ ｬ ｭ ｮ ｯ ｰ ',
       ]),
       Frame('List with null', ['This', 'is', 'a', 'test', null]),
       Frame('List with different types', [
@@ -76,20 +78,22 @@ List<Frame> get testFrames => <Frame>[
         'String': 'Hello',
         'List': [1, 2, null],
         'Null': null,
-        'Map': {'Key': 'Val', 'Key2': 2}
+        'Map': {'Key': 'Val', 'Key2': 2},
       }),
       Frame('DateTime test', [
         DateTimeWithoutTZ.fromMillisecondsSinceEpoch(0),
         DateTimeWithoutTZ.fromMillisecondsSinceEpoch(1566656623020),
       ]),
-      Frame('BigInt Test',
-          BigInt.parse('1234567890123456789012345678901234567890'))
+      Frame(
+        'BigInt Test',
+        BigInt.parse('1234567890123456789012345678901234567890'),
+      ),
     ];
 
 List<Frame> framesSetLengthOffset(List<Frame> frames, List<Uint8List> bytes) {
   var offset = 0;
   for (var i = 0; i < frames.length; i++) {
-    var length = bytes[i].length;
+    final length = bytes[i].length;
     frames[i]
       ..offset = offset
       ..length = length;
@@ -137,8 +141,10 @@ Frame lazyFrameWithLength(Frame frame, int length) {
 
 void expectFrame(Frame f1, Frame f2) {
   expect(f1.key, f2.key);
-  if (f1.value is double && f2.value is double) {
-    if (f1.value.isNaN as bool && f1.value.isNaN as bool) return;
+  final f1Value = f1.value;
+  final f2Value = f2.value;
+  if (f1Value is double && f2Value is double) {
+    if (f1Value.isNaN && f2Value.isNaN) return;
   }
   expect(f1.value, f2.value);
   expect(f1.length, f2.length);
@@ -147,8 +153,8 @@ void expectFrame(Frame f1, Frame f2) {
 }
 
 void expectFrames(Iterable<Frame> f1, Iterable<Frame> f2) {
-  var frames1 = f1.toList();
-  var frames2 = f2.toList();
+  final frames1 = f1.toList();
+  final frames2 = f2.toList();
 
   expect(frames1.length, f2.length);
   for (var i = 0; i < frames2.length; i++) {
@@ -157,16 +163,19 @@ void expectFrames(Iterable<Frame> f1, Iterable<Frame> f2) {
 }
 
 void buildGoldens() async {
-  Future<void> generate(String fileName, String varName,
-      Uint8List Function(Frame frame) transformer) async {
-    var file = File('test/generated/$fileName.g.dart');
+  Future<void> generate(
+    String fileName,
+    String varName,
+    Uint8List Function(Frame frame) transformer,
+  ) async {
+    final file = File('test/generated/$fileName.g.dart');
     await file.create();
-    var code = StringBuffer();
+    final code = StringBuffer();
     code.writeln("import 'dart:typed_data';\n");
     code.writeln('final $varName = [');
-    for (var frame in testFrames) {
+    for (final frame in testFrames) {
       code.writeln('// ${frame.key}');
-      var bytes = transformer(frame);
+      final bytes = transformer(frame);
       code.writeln('Uint8List.fromList(${bytes.toString()}),');
     }
     code.writeln('];');
@@ -174,22 +183,22 @@ void buildGoldens() async {
   }
 
   await generate('frames', 'frameBytes', (f) {
-    var writer = BinaryWriterImpl(testRegistry);
+    final writer = BinaryWriterImpl(testRegistry);
     writer.writeFrame(f);
     return writer.toBytes();
   });
   await generate('frame_values', 'frameValuesBytes', (f) {
-    var writer = BinaryWriterImpl(HiveImpl())
+    final writer = BinaryWriterImpl(HiveImpl())
       ..write(f.value, writeTypeId: false);
     return writer.toBytes();
   });
   await generate('frames_encrypted', 'frameBytesEncrypted', (f) {
-    var writer = BinaryWriterImpl(testRegistry);
+    final writer = BinaryWriterImpl(testRegistry);
     writer.writeFrame(f, cipher: testCipher);
     return writer.toBytes();
   });
   await generate('frame_values_encrypted', 'frameValuesBytesEncrypted', (f) {
-    var writer = BinaryWriterImpl(HiveImpl())
+    final writer = BinaryWriterImpl(HiveImpl())
       ..writeEncrypted(f.value, testCipher, writeTypeId: false);
     return writer.toBytes();
   });

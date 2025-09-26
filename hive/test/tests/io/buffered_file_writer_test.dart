@@ -1,4 +1,6 @@
 @TestOn('vm')
+library;
+
 import 'package:hive/src/io/buffered_file_writer.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
@@ -8,8 +10,8 @@ import '../mocks.dart';
 void main() {
   group('BufferedFileWriter', () {
     test('.write()', () async {
-      var file = MockRandomAccessFile();
-      var writer = BufferedFileWriter(file, 10);
+      final file = MockRandomAccessFile();
+      final writer = BufferedFileWriter(file, 10);
 
       await writer.write([1, 2, 3, 4, 5, 6]);
       await writer.write([7, 8, 9]);
@@ -29,9 +31,9 @@ void main() {
     });
 
     test('flush()', () async {
-      var file = MockRandomAccessFile();
+      final file = MockRandomAccessFile();
       when(() => file.writeFrom(any())).thenAnswer((i) => Future.value(file));
-      var writer = BufferedFileWriter(file, 10);
+      final writer = BufferedFileWriter(file, 10);
 
       await writer.flush();
       verifyZeroInteractions(file);

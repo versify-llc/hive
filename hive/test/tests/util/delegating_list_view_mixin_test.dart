@@ -3,8 +3,6 @@ import 'dart:math';
 import 'package:hive/src/util/delegating_list_view_mixin.dart';
 import 'package:test/test.dart';
 
-import '../common.dart';
-
 void main() {
   group('DelegatingIterable', () {
     late _TestList<String> testList;
@@ -27,7 +25,7 @@ void main() {
     });
 
     test('.cast()', () {
-      List dynamicList = testList;
+      final List dynamicList = testList;
       expect(dynamicList.cast<String>(), isA<List<String>>());
     });
 
@@ -98,11 +96,7 @@ void main() {
 
     test('.forEach()', () {
       final it = testList.iterator;
-      if (soundNullSafety) {
-        expect(() => it.current, throwsA(anything));
-      } else {
-        expect(it.current, null);
-      }
+      expect(() => it.current, throwsA(anything));
       expect(it.moveNext(), isTrue);
       expect(it.current, 'a');
       expect(it.moveNext(), isTrue);
@@ -110,11 +104,7 @@ void main() {
       expect(it.moveNext(), isTrue);
       expect(it.current, 'cc');
       expect(it.moveNext(), isFalse);
-      if (soundNullSafety) {
-        expect(() => it.current, throwsA(anything));
-      } else {
-        expect(it.current, null);
-      }
+      expect(() => it.current, throwsA(anything));
     });
 
     test('.join()', () {
@@ -271,8 +261,12 @@ class _TestList<T> with DelegatingListViewMixin<T> {
   void setAll(int index, Iterable<T> iterable) => throw UnimplementedError();
 
   @override
-  void setRange(int start, int end, Iterable<T> iterable,
-          [int skipCount = 0]) =>
+  void setRange(
+    int start,
+    int end,
+    Iterable<T> iterable, [
+    int skipCount = 0,
+  ]) =>
       throw UnimplementedError();
 
   @override

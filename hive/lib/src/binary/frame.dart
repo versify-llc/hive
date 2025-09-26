@@ -3,10 +3,10 @@ import 'package:hive/hive.dart';
 /// Not part of public API
 class Frame {
   /// Not part of public API
-  final dynamic key;
+  final Object? key;
 
   /// Not part of public API
-  final dynamic value;
+  final Object? value;
 
   /// Not part of public API
   final bool deleted;
@@ -72,7 +72,7 @@ class Frame {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     if (other is Frame) {
       return key == other.key &&
           value == other.value &&

@@ -3,6 +3,7 @@ import 'package:hive/hive.dart';
 
 abstract class BoxCollection {
   String get name;
+
   Set<String> get boxNames;
 
   static Future<BoxCollection> open(
@@ -14,9 +15,11 @@ abstract class BoxCollection {
     throw UnimplementedError();
   }
 
-  Future<CollectionBox<V>> openBox<V>(String name,
-      {bool preload = false,
-      CollectionBox<V> Function(String, BoxCollection)? boxCreator});
+  Future<CollectionBox<V>> openBox<V>(
+    String name, {
+    bool preload = false,
+    CollectionBox<V> Function(String, BoxCollection)? boxCreator,
+  });
 
   Future<void> transaction(
     Future<void> Function() action, {
@@ -32,6 +35,7 @@ abstract class BoxCollection {
 /// represents a [Box] being part of a [BoxCollection]
 abstract class CollectionBox<V> {
   String get name;
+
   BoxCollection get boxCollection;
 
   Future<List<String>> getAllKeys();

@@ -9,7 +9,7 @@ class _TestObject with HiveObjectMixin {
   _TestObject(this.name);
 
   @override
-  bool operator ==(dynamic other) => other is _TestObject && other.name == name;
+  bool operator ==(Object other) => other is _TestObject && other.name == name;
 
   @override
   int get hashCode => runtimeType.hashCode ^ name.hashCode;
@@ -31,7 +31,7 @@ class _TestObjectAdapter extends TypeAdapter<_TestObject> {
 }
 
 Future _performTest(bool lazy) async {
-  var hive = await createHive();
+  final hive = await createHive();
   hive.registerAdapter<_TestObject>(_TestObjectAdapter());
   var box = await openBox(lazy, hive: hive);
 
@@ -63,9 +63,13 @@ Future _performTest(bool lazy) async {
 }
 
 void main() {
-  group('use HiveObject to update and delete entries', () {
-    test('normal box', () => _performTest(false));
+  group(
+    'use HiveObject to update and delete entries',
+    () {
+      test('normal box', () => _performTest(false));
 
-    test('lazy box', () => _performTest(true));
-  }, timeout: longTimeout);
+      test('lazy box', () => _performTest(true));
+    },
+    timeout: longTimeout,
+  );
 }

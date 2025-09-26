@@ -1,4 +1,5 @@
 @TestOn('vm')
+library;
 
 import 'dart:async';
 import 'dart:io';
@@ -14,30 +15,30 @@ import '../tests/frames.dart';
 import 'integration.dart';
 
 Future _performTest(bool lazy) async {
-  var bytes = getFrameBytes(testFrames);
-  var frames = testFrames;
+  final bytes = getFrameBytes(testFrames);
+  final frames = testFrames;
 
   framesSetLengthOffset(frames, frameBytes);
 
-  var dir = await getTempDir();
-  var hive = HiveImpl();
+  final dir = await getTempDir();
+  final hive = HiveImpl();
   hive.init(dir.path);
 
   for (var i = 0; i < bytes.length; i++) {
-    var subBytes = bytes.sublist(0, i + 1);
-    var boxFile = File(path.join(dir.path, 'testbox$i.hive'));
+    final subBytes = bytes.sublist(0, i + 1);
+    final boxFile = File(path.join(dir.path, 'testbox$i.hive'));
     await boxFile.writeAsBytes(subBytes);
 
-    var subFrames = frames.takeWhile((f) => f.offset + f.length! <= i + 1);
-    var subKeystore = Keystore.debug(frames: subFrames);
+    final subFrames = frames.takeWhile((f) => f.offset + f.length! <= i + 1);
+    final subKeystore = Keystore.debug(frames: subFrames);
     if (lazy) {
-      var box = await hive.openLazyBox('testbox$i');
+      final box = await hive.openLazyBox('testbox$i');
       expect(box.keys, subKeystore.getKeys());
       await box.compact();
       await box.close();
     } else {
-      var box = await hive.openBox('testbox$i');
-      var map = Map.fromIterables(
+      final box = await hive.openBox('testbox$i');
+      final map = Map.fromIterables(
         subKeystore.getKeys(),
         subKeystore.getValues(),
       );
@@ -60,9 +61,13 @@ Future _performTestWithoutOutput(bool lazy) {
 }
 
 void main() {
-  group('test recovery', () {
-    test('normal box', () => _performTestWithoutOutput(false));
+  group(
+    'test recovery',
+    () {
+      test('normal box', () => _performTestWithoutOutput(false));
 
-    test('lazy box', () => _performTestWithoutOutput(true));
-  }, timeout: longTimeout);
+      test('lazy box', () => _performTestWithoutOutput(true));
+    },
+    timeout: longTimeout,
+  );
 }
