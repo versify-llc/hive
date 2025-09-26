@@ -1,5 +1,5 @@
 import 'package:analyzer/dart/constant/value.dart';
-import 'package:analyzer/dart/element/element2.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:collection/collection.dart';
 import 'package:hive/hive.dart';
 import 'package:source_gen/source_gen.dart';
@@ -14,7 +14,7 @@ class HiveFieldInfo {
   final DartObject? defaultValue;
 }
 
-HiveFieldInfo? getHiveFieldAnn(Element2? element) {
+HiveFieldInfo? getHiveFieldAnn(Element? element) {
   if (element == null) return null;
 
   final obj = _hiveFieldChecker.firstAnnotationOfExact(element);
@@ -26,8 +26,8 @@ HiveFieldInfo? getHiveFieldAnn(Element2? element) {
   );
 }
 
-ConstructorElement2 getConstructor(InterfaceElement2 cls) {
-  final constr = cls.constructors2.firstWhereOrNull((it) => it.name3 == 'new');
+ConstructorElement getConstructor(InterfaceElement cls) {
+  final constr = cls.constructors.firstWhereOrNull((it) => it.name == 'new');
   if (constr == null) {
     throw 'Provide an unnamed constructor.';
   }

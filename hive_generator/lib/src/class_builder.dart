@@ -23,7 +23,7 @@ class ClassBuilder extends Builder {
   @override
   String buildRead() {
     final constr =
-        cls.constructors2.firstOrNullWhere((it) => it.displayName.isEmpty);
+        cls.constructors.firstOrNullWhere((it) => it.displayName.isEmpty);
     check(constr != null, 'Provide an unnamed constructor.');
 
     // The remaining fields to initialize.

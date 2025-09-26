@@ -1,4 +1,4 @@
-import 'package:analyzer/dart/element/element2.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_generator/src/builder.dart';
@@ -24,7 +24,7 @@ class TypeAdapterGenerator extends GeneratorForAnnotation<HiveType> {
 
   @override
   Future<String> generateForAnnotatedElement(
-    Element2 element,
+    Element element,
     ConstantReader annotation,
     BuildStep buildStep,
   ) async {
@@ -41,7 +41,7 @@ class TypeAdapterGenerator extends GeneratorForAnnotation<HiveType> {
     final typeId = getTypeId(annotation);
 
     final adapterName = getAdapterName(cls.displayName, annotation);
-    final builder = cls.thisType is EnumElement2
+    final builder = cls.thisType is EnumElement
         ? EnumBuilder(cls, getters)
         : ClassBuilder(cls, getters, setters);
 
@@ -73,21 +73,21 @@ class TypeAdapterGenerator extends GeneratorForAnnotation<HiveType> {
     ''';
   }
 
-  InterfaceElement2 getClass(Element2 element) {
+  InterfaceElement getClass(Element element) {
     check(
       element.kind == ElementKind.CLASS || element.kind == ElementKind.ENUM,
       'Only classes or enums are allowed to be annotated with @HiveType.',
     );
 
-    return element as InterfaceElement2;
+    return element as InterfaceElement;
   }
 
-  Set<String> getAllAccessorNames(InterfaceElement2 cls) {
+  Set<String> getAllAccessorNames(InterfaceElement cls) {
     final accessorNames = <String>{};
-    final supertypes = cls.allSupertypes.map((it) => it.element3);
+    final supertypes = cls.allSupertypes.map((it) => it.element);
 
     for (final type in [cls, ...supertypes]) {
-      for (final accessor in [...type.getters2, ...type.setters2]) {
+      for (final accessor in [...type.getters, ...type.setters]) {
         accessorNames.add(accessor.displayName);
       }
     }
@@ -96,8 +96,8 @@ class TypeAdapterGenerator extends GeneratorForAnnotation<HiveType> {
   }
 
   List<List<AdapterField>> getAccessors(
-    InterfaceElement2 cls,
-    LibraryElement2 library,
+    InterfaceElement cls,
+    LibraryElement library,
   ) {
     final accessorNames = getAllAccessorNames(cls);
 
@@ -105,12 +105,12 @@ class TypeAdapterGenerator extends GeneratorForAnnotation<HiveType> {
     final setters = <AdapterField>[];
 
     for (final name in accessorNames) {
-      final getter = cls.lookUpGetter2(name: name, library: library);
+      final getter = cls.lookUpGetter(name: name, library: library);
       if (getter != null) {
         final getterAnn =
-            getHiveFieldAnn(getter.variable3) ?? getHiveFieldAnn(getter);
+            getHiveFieldAnn(getter.variable) ?? getHiveFieldAnn(getter);
         if (getterAnn != null) {
-          final field = getter.variable3!;
+          final field = getter.variable;
           getters.add(
             AdapterField(
               getterAnn.index,
@@ -122,15 +122,15 @@ class TypeAdapterGenerator extends GeneratorForAnnotation<HiveType> {
         }
       }
 
-      final setter = cls.lookUpSetter2(
+      final setter = cls.lookUpSetter(
         name: '$name=',
         library: library,
       );
       if (setter != null) {
         final setterAnn =
-            getHiveFieldAnn(setter.variable3) ?? getHiveFieldAnn(setter);
+            getHiveFieldAnn(setter.variable) ?? getHiveFieldAnn(setter);
         if (setterAnn != null) {
-          final field = setter.variable3!;
+          final field = setter.variable;
           setters.add(
             AdapterField(
               setterAnn.index,

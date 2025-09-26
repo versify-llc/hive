@@ -1,5 +1,5 @@
 import 'package:analyzer/dart/constant/value.dart';
-import 'package:analyzer/dart/element/element2.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 
 class AdapterField {
@@ -12,7 +12,7 @@ class AdapterField {
 }
 
 abstract class Builder {
-  final InterfaceElement2 cls;
+  final InterfaceElement cls;
   final List<AdapterField> getters;
   final List<AdapterField> setters;
 
