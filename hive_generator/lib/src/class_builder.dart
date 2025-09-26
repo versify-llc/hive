@@ -13,24 +13,25 @@ import 'type_helper.dart';
 class ClassBuilder extends Builder {
   ClassBuilder(super.cls, super.getters, super.setters);
 
-  var hiveListChecker = const TypeChecker.fromRuntime(HiveList);
-  var listChecker = const TypeChecker.fromRuntime(List);
-  var mapChecker = const TypeChecker.fromRuntime(Map);
-  var setChecker = const TypeChecker.fromRuntime(Set);
-  var iterableChecker = const TypeChecker.fromRuntime(Iterable);
-  var uint8ListChecker = const TypeChecker.fromRuntime(Uint8List);
+  var hiveListChecker = const TypeChecker.typeNamed(HiveList);
+  var listChecker = const TypeChecker.typeNamed(List);
+  var mapChecker = const TypeChecker.typeNamed(Map);
+  var setChecker = const TypeChecker.typeNamed(Set);
+  var iterableChecker = const TypeChecker.typeNamed(Iterable);
+  var uint8ListChecker = const TypeChecker.typeNamed(Uint8List);
 
   @override
   String buildRead() {
-    final constr = cls.constructors.firstOrNullWhere((it) => it.name.isEmpty);
+    final constr =
+        cls.constructors2.firstOrNullWhere((it) => it.displayName.isEmpty);
     check(constr != null, 'Provide an unnamed constructor.');
 
     // The remaining fields to initialize.
     final fields = setters.toList();
 
     // Empty classes
-    if (constr!.parameters.isEmpty && fields.isEmpty) {
-      return 'return ${cls.name}();';
+    if (constr!.formalParameters.isEmpty && fields.isEmpty) {
+      return 'return ${cls.displayName}();';
     }
 
     final code = StringBuffer();
@@ -40,16 +41,16 @@ class ClassBuilder extends Builder {
       for (int i = 0; i < numOfFields; i++)
         reader.readByte(): reader.read(),
     };
-    return ${cls.name}(
+    return ${cls.displayName}(
     ''');
 
-    for (final param in constr.parameters) {
-      var field = fields.firstOrNullWhere((it) => it.name == param.name);
+    for (final param in constr.formalParameters) {
+      var field = fields.firstOrNullWhere((it) => it.name == param.displayName);
       // Final fields
-      field ??= getters.firstOrNullWhere((it) => it.name == param.name);
+      field ??= getters.firstOrNullWhere((it) => it.name == param.displayName);
       if (field != null) {
         if (param.isNamed) {
-          code.write('${param.name}: ');
+          code.write('${param.displayName}: ');
         }
         code.write(
           _value(param.type, 'fields[${field.index}]', field.defaultValue),

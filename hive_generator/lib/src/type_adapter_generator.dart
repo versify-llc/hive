@@ -1,4 +1,4 @@
-import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/element2.dart';
 import 'package:build/build.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_generator/src/builder.dart';
@@ -24,7 +24,7 @@ class TypeAdapterGenerator extends GeneratorForAnnotation<HiveType> {
 
   @override
   Future<String> generateForAnnotatedElement(
-    Element element,
+    Element2 element,
     ConstantReader annotation,
     BuildStep buildStep,
   ) async {
@@ -40,23 +40,23 @@ class TypeAdapterGenerator extends GeneratorForAnnotation<HiveType> {
 
     final typeId = getTypeId(annotation);
 
-    final adapterName = getAdapterName(cls.name, annotation);
-    final builder = cls.thisType is EnumElement
+    final adapterName = getAdapterName(cls.displayName, annotation);
+    final builder = cls.thisType is EnumElement2
         ? EnumBuilder(cls, getters)
         : ClassBuilder(cls, getters, setters);
 
     return '''
-    class $adapterName extends TypeAdapter<${cls.name}> {
+    class $adapterName extends TypeAdapter<${cls.displayName}> {
       @override
       final int typeId = $typeId;
 
       @override
-      ${cls.name} read(BinaryReader reader) {
+      ${cls.displayName} read(BinaryReader reader) {
         ${builder.buildRead()}
       }
 
       @override
-      void write(BinaryWriter writer, ${cls.name} obj) {
+      void write(BinaryWriter writer, ${cls.displayName} obj) {
         ${builder.buildWrite()}
       }
 
@@ -73,27 +73,22 @@ class TypeAdapterGenerator extends GeneratorForAnnotation<HiveType> {
     ''';
   }
 
-  InterfaceElement getClass(Element element) {
+  InterfaceElement2 getClass(Element2 element) {
     check(
       element.kind == ElementKind.CLASS || element.kind == ElementKind.ENUM,
       'Only classes or enums are allowed to be annotated with @HiveType.',
     );
 
-    return element as InterfaceElement;
+    return element as InterfaceElement2;
   }
 
-  Set<String> getAllAccessorNames(InterfaceElement cls) {
+  Set<String> getAllAccessorNames(InterfaceElement2 cls) {
     final accessorNames = <String>{};
+    final supertypes = cls.allSupertypes.map((it) => it.element3);
 
-    final supertypes = cls.allSupertypes.map((it) => it.element);
     for (final type in [cls, ...supertypes]) {
-      for (final accessor in type.accessors) {
-        if (accessor.isSetter) {
-          final name = accessor.name;
-          accessorNames.add(name.substring(0, name.length - 1));
-        } else {
-          accessorNames.add(accessor.name);
-        }
+      for (final accessor in [...type.getters2, ...type.setters2]) {
+        accessorNames.add(accessor.displayName);
       }
     }
 
@@ -101,24 +96,25 @@ class TypeAdapterGenerator extends GeneratorForAnnotation<HiveType> {
   }
 
   List<List<AdapterField>> getAccessors(
-    InterfaceElement cls,
-    LibraryElement library,
+    InterfaceElement2 cls,
+    LibraryElement2 library,
   ) {
     final accessorNames = getAllAccessorNames(cls);
 
     final getters = <AdapterField>[];
     final setters = <AdapterField>[];
+
     for (final name in accessorNames) {
-      final getter = cls.augmented.lookUpGetter(name: name, library: library);
+      final getter = cls.lookUpGetter2(name: name, library: library);
       if (getter != null) {
         final getterAnn =
-            getHiveFieldAnn(getter.variable2) ?? getHiveFieldAnn(getter);
+            getHiveFieldAnn(getter.variable3) ?? getHiveFieldAnn(getter);
         if (getterAnn != null) {
-          final field = getter.variable2!;
+          final field = getter.variable3!;
           getters.add(
             AdapterField(
               getterAnn.index,
-              field.name,
+              field.displayName,
               field.type,
               getterAnn.defaultValue,
             ),
@@ -126,19 +122,19 @@ class TypeAdapterGenerator extends GeneratorForAnnotation<HiveType> {
         }
       }
 
-      final setter = cls.augmented.lookUpSetter(
+      final setter = cls.lookUpSetter2(
         name: '$name=',
         library: library,
       );
       if (setter != null) {
         final setterAnn =
-            getHiveFieldAnn(setter.variable2) ?? getHiveFieldAnn(setter);
+            getHiveFieldAnn(setter.variable3) ?? getHiveFieldAnn(setter);
         if (setterAnn != null) {
-          final field = setter.variable2!;
+          final field = setter.variable3!;
           setters.add(
             AdapterField(
               setterAnn.index,
-              field.name,
+              field.displayName,
               field.type,
               setterAnn.defaultValue,
             ),

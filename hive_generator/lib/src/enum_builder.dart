@@ -6,7 +6,8 @@ class EnumBuilder extends Builder {
 
   @override
   String buildRead() {
-    check(getters.isNotEmpty, '${cls.name} does not have any enum value.');
+    check(
+        getters.isNotEmpty, '${cls.displayName} does not have any enum value.');
 
     final code = StringBuffer();
     code.writeln('switch (reader.readByte()) {');
@@ -14,7 +15,7 @@ class EnumBuilder extends Builder {
     for (final field in getters) {
       code.writeln('''
         case ${field.index}:
-          return ${cls.name}.${field.name};''');
+          return ${cls.displayName}.${field.name};''');
     }
 
     final defaultField = getters.firstWhere(
@@ -23,7 +24,7 @@ class EnumBuilder extends Builder {
     );
     code.writeln('''
       default:
-        return ${cls.name}.${defaultField.name};
+        return ${cls.displayName}.${defaultField.name};
       }''');
 
     return code.toString();
@@ -36,7 +37,7 @@ class EnumBuilder extends Builder {
 
     for (final field in getters) {
       code.writeln('''
-        case ${cls.name}.${field.name}:
+        case ${cls.displayName}.${field.name}:
           writer.writeByte(${field.index});
           break;''');
     }

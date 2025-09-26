@@ -7,14 +7,15 @@ environment:
   sdk: ^3.0.0
 
 dependencies:
-  build: ^2.0.0
-  source_gen: ^1.0.0
+  build: ^3.1.0
+  collection: ^1.18.0
+  source_gen: ^3.1.0
   hive:
     path: ../hive
-  analyzer: ^6.5.0
-  source_helper: ^1.1.0
+  analyzer: ^7.7.0
+  source_helper: ^1.3.8
 
 dev_dependencies:
-  test: ^1.17.11
+  test: ^1.26.3
   build_test: any
   build_runner: any
