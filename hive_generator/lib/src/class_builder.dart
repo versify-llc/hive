@@ -1,22 +1,17 @@
 import 'dart:typed_data';
 
 import 'package:analyzer/dart/constant/value.dart';
-import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:hive/hive.dart';
-import 'package:hive_generator/src/builder.dart';
-import 'package:hive_generator/src/helper.dart';
 import 'package:source_gen/source_gen.dart';
 
+import 'builder.dart';
+import 'helper.dart';
 import 'type_helper.dart';
 
 class ClassBuilder extends Builder {
-  ClassBuilder(
-    ClassElement cls,
-    List<AdapterField> getters,
-    List<AdapterField> setters,
-  ) : super(cls, getters, setters);
+  ClassBuilder(super.cls, super.getters, super.setters);
 
   var hiveListChecker = const TypeChecker.fromRuntime(HiveList);
   var listChecker = const TypeChecker.fromRuntime(List);
@@ -27,18 +22,18 @@ class ClassBuilder extends Builder {
 
   @override
   String buildRead() {
-    var constr = cls.constructors.firstOrNullWhere((it) => it.name.isEmpty);
+    final constr = cls.constructors.firstOrNullWhere((it) => it.name.isEmpty);
     check(constr != null, 'Provide an unnamed constructor.');
 
     // The remaining fields to initialize.
-    var fields = setters.toList();
+    final fields = setters.toList();
 
     // Empty classes
     if (constr!.parameters.isEmpty && fields.isEmpty) {
       return 'return ${cls.name}();';
     }
 
-    var code = StringBuffer();
+    final code = StringBuffer();
     code.writeln('''
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
@@ -48,7 +43,7 @@ class ClassBuilder extends Builder {
     return ${cls.name}(
     ''');
 
-    for (var param in constr.parameters) {
+    for (final param in constr.parameters) {
       var field = fields.firstOrNullWhere((it) => it.name == param.name);
       // Final fields
       field ??= getters.firstOrNullWhere((it) => it.name == param.name);
@@ -56,11 +51,9 @@ class ClassBuilder extends Builder {
         if (param.isNamed) {
           code.write('${param.name}: ');
         }
-        code.write(_value(
-          param.type,
-          'fields[${field.index}]',
-          field.defaultValue,
-        ));
+        code.write(
+          _value(param.type, 'fields[${field.index}]', field.defaultValue),
+        );
         code.writeln(',');
         fields.remove(field);
       }
@@ -70,13 +63,11 @@ class ClassBuilder extends Builder {
 
     // There may still be fields to initialize that were not in the constructor
     // as initializing formals. We do so using cascades.
-    for (var field in fields) {
+    for (final field in fields) {
       code.write('..${field.name} = ');
-      code.writeln(_value(
-        field.type,
-        'fields[${field.index}]',
-        field.defaultValue,
-      ));
+      code.writeln(
+        _value(field.type, 'fields[${field.index}]', field.defaultValue),
+      );
     }
 
     code.writeln(';');
@@ -85,13 +76,13 @@ class ClassBuilder extends Builder {
   }
 
   String _value(DartType type, String variable, DartObject? defaultValue) {
-    var value = _cast(type, variable);
+    final value = _cast(type, variable);
     if (defaultValue?.isNull != false) return value;
     return '$variable == null ? ${constantToString(defaultValue!)} : $value';
   }
 
   String _cast(DartType type, String variable) {
-    var suffix = _suffixFromType(type);
+    final suffix = _suffixFromType(type);
     if (hiveListChecker.isAssignableFromType(type)) {
       return '($variable as HiveList$suffix)$suffix.castHiveList()';
     } else if (iterableChecker.isAssignableFromType(type) &&
@@ -99,6 +90,10 @@ class ClassBuilder extends Builder {
       return '($variable as List$suffix)${_castIterable(type)}';
     } else if (mapChecker.isAssignableFromType(type)) {
       return '($variable as Map$suffix)${_castMap(type)}';
+    } else if (type.isDartCoreInt) {
+      return '($variable as num$suffix)$suffix.toInt()';
+    } else if (type.isDartCoreDouble) {
+      return '($variable as num$suffix)$suffix.toDouble()';
     } else {
       return '$variable as ${_displayString(type)}';
     }
@@ -114,9 +109,9 @@ class ClassBuilder extends Builder {
   }
 
   String _castIterable(DartType type) {
-    var paramType = type as ParameterizedType;
-    var arg = paramType.typeArguments.first;
-    var suffix = _accessorSuffixFromType(type);
+    final paramType = type as ParameterizedType;
+    final arg = paramType.typeArguments.first;
+    final suffix = _accessorSuffixFromType(type);
     if (isMapOrIterable(arg) && !isUint8List(arg)) {
       var cast = '';
       // Using assignable because List? is not exactly List
@@ -126,20 +121,18 @@ class ClassBuilder extends Builder {
       } else if (setChecker.isAssignableFromType(type)) {
         cast = '.toSet()';
       }
-      // The suffix is not needed with nnbd on $cast becauuse it short circuits,
-      // otherwise it is needed.
-      var castWithSuffix = isLibraryNNBD(cls) ? '$cast' : '$suffix$cast';
-      return '$suffix.map((dynamic e)=> ${_cast(arg, 'e')})$castWithSuffix';
+
+      return '$suffix.map((dynamic e)=> ${_cast(arg, 'e')})$cast';
     } else {
       return '$suffix.cast<${_displayString(arg)}>()';
     }
   }
 
   String _castMap(DartType type) {
-    var paramType = type as ParameterizedType;
-    var arg1 = paramType.typeArguments[0];
-    var arg2 = paramType.typeArguments[1];
-    var suffix = _accessorSuffixFromType(type);
+    final paramType = type as ParameterizedType;
+    final arg1 = paramType.typeArguments[0];
+    final arg2 = paramType.typeArguments[1];
+    final suffix = _accessorSuffixFromType(type);
     if (isMapOrIterable(arg1) || isMapOrIterable(arg2)) {
       return '$suffix.map((dynamic k, dynamic v)=>'
           'MapEntry(${_cast(arg1, 'k')},${_cast(arg2, 'v')}))';
@@ -151,11 +144,11 @@ class ClassBuilder extends Builder {
 
   @override
   String buildWrite() {
-    var code = StringBuffer();
+    final code = StringBuffer();
     code.writeln('writer');
     code.writeln('..writeByte(${getters.length})');
-    for (var field in getters) {
-      var value = _convertIterable(field.type, 'obj.${field.name}');
+    for (final field in getters) {
+      final value = _convertIterable(field.type, 'obj.${field.name}');
       code.writeln('''
       ..writeByte(${field.index})
       ..write($value)''');
@@ -173,7 +166,7 @@ class ClassBuilder extends Builder {
     // Iterable
     if (setChecker.isAssignableFromType(type) ||
         iterableChecker.isAssignableFromType(type)) {
-      var suffix = _accessorSuffixFromType(type);
+      final suffix = _accessorSuffixFromType(type);
       return '$accessor$suffix.toList()';
     } else {
       return accessor;
@@ -183,7 +176,7 @@ class ClassBuilder extends Builder {
 
 extension _FirstOrNullWhere<T> on Iterable<T> {
   T? firstOrNullWhere(bool Function(T) predicate) {
-    for (var it in this) {
+    for (final it in this) {
       if (predicate(it)) {
         return it;
       }
@@ -217,6 +210,6 @@ String _suffixFromType(DartType type) {
 }
 
 String _displayString(DartType e) {
-  var suffix = _suffixFromType(e);
-  return '${e.getDisplayString(withNullability: false)}$suffix';
+  final suffix = _suffixFromType(e);
+  return '${e.getDisplayString()}$suffix';
 }

@@ -9,34 +9,20 @@ class HiveFieldInfo {
   HiveFieldInfo(this.index, this.defaultValue);
 
   final int index;
+
   final DartObject? defaultValue;
 }
 
-HiveFieldInfo? getHiveFieldAnn(Element element) {
-  var obj = _hiveFieldChecker.firstAnnotationOfExact(element);
+HiveFieldInfo? getHiveFieldAnn(Element? element) {
+  if (element == null) return null;
+
+  final obj = _hiveFieldChecker.firstAnnotationOfExact(element);
   if (obj == null) return null;
 
   return HiveFieldInfo(
     obj.getField('index')!.toIntValue()!,
     obj.getField('defaultValue'),
   );
-}
-
-bool isLibraryNNBD(Element element) {
-  final dartVersion = element.library!.languageVersion.effective;
-  // Libraries with the dart version >= 2.12 are nnbd
-  if (dartVersion.major >= 2 && dartVersion.minor >= 12) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
-Iterable<ClassElement> getTypeAndAllSupertypes(ClassElement cls) {
-  var types = <ClassElement>{};
-  types.add(cls);
-  types.addAll(cls.allSupertypes.map((it) => it.element));
-  return types;
 }
 
 void check(bool condition, Object error) {
