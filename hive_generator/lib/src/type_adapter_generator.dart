@@ -6,6 +6,7 @@ import 'package:hive_generator/src/class_builder.dart';
 import 'package:hive_generator/src/enum_builder.dart';
 import 'package:hive_generator/src/helper.dart';
 import 'package:source_gen/source_gen.dart';
+import 'package:source_helper/source_helper.dart';
 
 class TypeAdapterGenerator extends GeneratorForAnnotation<HiveType> {
   static String generateName(String typeName) {
@@ -41,7 +42,7 @@ class TypeAdapterGenerator extends GeneratorForAnnotation<HiveType> {
     final typeId = getTypeId(annotation);
 
     final adapterName = getAdapterName(cls.displayName, annotation);
-    final builder = cls.thisType is EnumElement
+    final builder = cls.thisType.isEnum
         ? EnumBuilder(cls, getters)
         : ClassBuilder(cls, getters, setters);
 
@@ -122,10 +123,7 @@ class TypeAdapterGenerator extends GeneratorForAnnotation<HiveType> {
         }
       }
 
-      final setter = cls.lookUpSetter(
-        name: '$name=',
-        library: library,
-      );
+      final setter = cls.lookUpSetter(name: '$name=', library: library);
       if (setter != null) {
         final setterAnn =
             getHiveFieldAnn(setter.variable) ?? getHiveFieldAnn(setter);
