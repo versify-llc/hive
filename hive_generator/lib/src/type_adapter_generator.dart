@@ -1,10 +1,10 @@
 import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
 import 'package:hive/hive.dart';
-import 'package:hive_generator/src/builder.dart';
-import 'package:hive_generator/src/class_builder.dart';
-import 'package:hive_generator/src/enum_builder.dart';
-import 'package:hive_generator/src/helper.dart';
+import 'package:hive_generator/src/builders/builder.dart';
+import 'package:hive_generator/src/builders/class_builder.dart';
+import 'package:hive_generator/src/builders/enum_builder.dart';
+import 'package:hive_generator/src/helpers/helpers.dart';
 import 'package:source_gen/source_gen.dart';
 import 'package:source_helper/source_helper.dart';
 
@@ -109,7 +109,8 @@ class TypeAdapterGenerator extends GeneratorForAnnotation<HiveType> {
       final getter = cls.lookUpGetter(name: name, library: library);
       if (getter != null) {
         final getterAnn =
-            getHiveFieldAnn(getter.variable) ?? getHiveFieldAnn(getter);
+            getHiveFieldAnnotation(getter.variable) ??
+            getHiveFieldAnnotation(getter);
         if (getterAnn != null) {
           final field = getter.variable;
           getters.add(
@@ -126,7 +127,8 @@ class TypeAdapterGenerator extends GeneratorForAnnotation<HiveType> {
       final setter = cls.lookUpSetter(name: '$name=', library: library);
       if (setter != null) {
         final setterAnn =
-            getHiveFieldAnn(setter.variable) ?? getHiveFieldAnn(setter);
+            getHiveFieldAnnotation(setter.variable) ??
+            getHiveFieldAnnotation(setter);
         if (setterAnn != null) {
           final field = setter.variable;
           setters.add(

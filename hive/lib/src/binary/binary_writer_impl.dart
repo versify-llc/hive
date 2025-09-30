@@ -21,7 +21,6 @@ class BinaryWriterImpl extends BinaryWriter {
   int _offset = 0;
 
   @pragma('vm:prefer-inline')
-  @pragma('dart2js:tryInline')
   ByteData get _byteData {
     _byteDataInstance ??= ByteData.view(_buffer.buffer);
     return _byteDataInstance!;
@@ -36,7 +35,6 @@ class BinaryWriterImpl extends BinaryWriter {
   BinaryWriterImpl.withBuffer(this._buffer, this._typeRegistry);
 
   @pragma('vm:prefer-inline')
-  @pragma('dart2js:tryInline')
   void _reserveBytes(int count) {
     if (_buffer.length - _offset < count) {
       _increaseBufferSize(count);
@@ -53,7 +51,6 @@ class BinaryWriterImpl extends BinaryWriter {
   }
 
   @pragma('vm:prefer-inline')
-  @pragma('dart2js:tryInline')
   void _addBytes(List<int> bytes) {
     ArgumentError.checkNotNull(bytes);
 
@@ -64,7 +61,6 @@ class BinaryWriterImpl extends BinaryWriter {
   }
 
   @pragma('vm:prefer-inline')
-  @pragma('dart2js:tryInline')
   @override
   void writeByte(int byte) {
     ArgumentError.checkNotNull(byte);
@@ -92,7 +88,6 @@ class BinaryWriterImpl extends BinaryWriter {
   }
 
   @pragma('vm:prefer-inline')
-  @pragma('dart2js:tryInline')
   @override
   void writeUint32(int value) {
     ArgumentError.checkNotNull(value);
@@ -348,7 +343,6 @@ class BinaryWriterImpl extends BinaryWriter {
   }
 
   @pragma('vm:prefer-inline')
-  @pragma('dart2js:tryInline')
   void _writeList(List value, {bool writeTypeId = true}) {
     if (value is HiveList) {
       if (writeTypeId) {
@@ -395,7 +389,6 @@ class BinaryWriterImpl extends BinaryWriter {
 
   /// Not part of public API
   @pragma('vm:prefer-inline')
-  @pragma('dart2js:tryInline')
   void writeEncrypted(
     dynamic value,
     HiveCipher cipher, {
@@ -419,7 +412,6 @@ class BinaryWriterImpl extends BinaryWriter {
   }
 
   @pragma('vm:prefer-inline')
-  @pragma('dart2js:tryInline')
   static int _pow2roundup(int x) {
     assert(x > 0);
     --x;

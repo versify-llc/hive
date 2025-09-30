@@ -151,12 +151,10 @@ class IndexableSkipList<K, V> {
 
   /// Not part of public API
   @pragma('vm:prefer-inline')
-  @pragma('dart2js:tryInline')
   V? get(K key) => _getNode(key)?.value;
 
   /// Not part of public API
   @pragma('vm:prefer-inline')
-  @pragma('dart2js:tryInline')
   Iterable<V> valuesFromKey(K key) {
     final node = _getNode(key);
     final virtualHead = _Node(null, null, [node], [0]);
@@ -183,12 +181,10 @@ class IndexableSkipList<K, V> {
 
   /// Not part of public API
   @pragma('vm:prefer-inline')
-  @pragma('dart2js:tryInline')
   V? getAt(int index) => _getNodeAt(index).value;
 
   /// Not part of public API
   @pragma('vm:prefer-inline')
-  @pragma('dart2js:tryInline')
   K? getKeyAt(int index) => _getNodeAt(index).key;
 
   _Node<K, V> _getNodeAt(int index) {

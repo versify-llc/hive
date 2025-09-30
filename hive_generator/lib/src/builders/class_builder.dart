@@ -5,9 +5,8 @@ import 'package:analyzer/dart/element/nullability_suffix.dart';
 import 'package:analyzer/dart/element/type.dart';
 import 'package:collection/collection.dart';
 import 'package:hive/hive.dart';
-import 'package:hive_generator/src/builder.dart';
-import 'package:hive_generator/src/helper.dart';
-import 'package:hive_generator/src/type_helper.dart';
+import 'package:hive_generator/src/builders/builder.dart';
+import 'package:hive_generator/src/helpers/helpers.dart';
 import 'package:source_gen/source_gen.dart';
 
 class ClassBuilder extends Builder {
@@ -52,7 +51,11 @@ class ClassBuilder extends Builder {
           code.write('${param.displayName}: ');
         }
         code.write(
-          _value(param.type, 'fields[${field.index}]', field.defaultValue),
+          _parameterValue(
+            param.type,
+            'fields[${field.index}]',
+            field.defaultValue,
+          ),
         );
         code.writeln(',');
         fields.remove(field);
@@ -66,7 +69,11 @@ class ClassBuilder extends Builder {
     for (final field in fields) {
       code.write('..${field.name} = ');
       code.writeln(
-        _value(field.type, 'fields[${field.index}]', field.defaultValue),
+        _parameterValue(
+          field.type,
+          'fields[${field.index}]',
+          field.defaultValue,
+        ),
       );
     }
 
@@ -75,9 +82,16 @@ class ClassBuilder extends Builder {
     return code.toString();
   }
 
-  String _value(DartType type, String variable, DartObject? defaultValue) {
+  String _parameterValue(
+    DartType type,
+    String variable,
+    DartObject? defaultValue,
+  ) {
     final value = _cast(type, variable);
-    if (defaultValue?.isNull != false) return value;
+    if (defaultValue?.isNull != false) {
+      return value;
+    }
+
     return '$variable == null ? ${constantToString(defaultValue)} : $value';
   }
 

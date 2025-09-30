@@ -4,7 +4,6 @@ part of 'hive_object.dart';
 extension HiveObjectInternal on HiveObjectMixin {
   /// Not part of public API
   @pragma('vm:prefer-inline')
-  @pragma('dart2js:tryInline')
   void init(dynamic key, BoxBase box) {
     if (_box != null) {
       if (_box != box) {

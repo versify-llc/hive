@@ -20,7 +20,7 @@ import 'package:meta/meta.dart';
 /// Not part of public API
 class HiveImpl extends TypeRegistryImpl implements HiveInterface {
   static final BackendManagerInterface _defaultBackendManager =
-      BackendManager.select();
+      BackendManager();
 
   final _boxes = HashMap<String, BoxBaseImpl>();
   final _openingBoxes = HashMap<String, Future>();
@@ -48,13 +48,9 @@ class HiveImpl extends TypeRegistryImpl implements HiveInterface {
   }
 
   @override
-  void init(
-    String? path, {
-    HiveStorageBackendPreference backendPreference =
-        HiveStorageBackendPreference.native,
-  }) {
+  void init(String? path) {
     homePath = path;
-    _managerOverride = BackendManager.select(backendPreference);
+    _managerOverride = BackendManager();
   }
 
   Future<BoxBase<E>> _openBox<E>(

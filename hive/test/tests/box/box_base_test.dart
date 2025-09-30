@@ -160,6 +160,7 @@ void main() {
       when(() => box.lazy).thenReturn(false);
 
       when(() => backend.initialize(any(), any(), any())).thenAnswer((i) async {
+        // ignore: avoid_dynamic_calls
         i.positionalArguments[1].insert(Frame('key1', 1));
       });
 

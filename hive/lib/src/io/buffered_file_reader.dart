@@ -37,7 +37,6 @@ class BufferedFileReader {
 
   /// Not part of public API
   @pragma('vm:prefer-inline')
-  @pragma('dart2js:tryInline')
   void skip(int bytes) {
     assert(bytes >= 0 && remainingInBuffer >= bytes);
     _bufferOffset += bytes;
@@ -45,7 +44,6 @@ class BufferedFileReader {
 
   /// Not part of public API
   @pragma('vm:prefer-inline')
-  @pragma('dart2js:tryInline')
   Uint8List viewBytes(int bytes) {
     assert(bytes >= 0 && remainingInBuffer >= bytes);
     final view = Uint8List.view(buffer.buffer, _bufferOffset, bytes);
@@ -55,7 +53,6 @@ class BufferedFileReader {
 
   /// Not part of public API
   @pragma('vm:prefer-inline')
-  @pragma('dart2js:tryInline')
   Uint8List peekBytes(int bytes) {
     assert(bytes >= 0 && remainingInBuffer >= bytes);
     return Uint8List.view(buffer.buffer, _bufferOffset, bytes);

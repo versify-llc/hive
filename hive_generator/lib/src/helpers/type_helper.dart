@@ -5,11 +5,13 @@ import 'package:source_helper/source_helper.dart';
 
 const bool kConstConstructors = true;
 
+/// Transform a compile-time constant value into a string
 String constantToString(
   DartObject? object, [
   List<String> typeInformation = const [],
 ]) {
   if (object == null || object.isNull) return 'null';
+
   final reader = ConstantReader(object);
   return reader.isLiteral
       ? literalToString(object, typeInformation)
@@ -86,6 +88,7 @@ String literalToString(DartObject object, List<String> typeInformation) {
     final listItems = reader.listValue
         .map((it) => constantToString(it, listTypeInformation))
         .join(', ');
+
     return '[$listItems]';
   }
 
@@ -94,6 +97,7 @@ String literalToString(DartObject object, List<String> typeInformation) {
     final setItems = reader.setValue
         .map((it) => constantToString(it, setTypeInformation))
         .join(', ');
+
     return '{$setItems}';
   }
 

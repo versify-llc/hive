@@ -6,37 +6,34 @@ import 'package:source_gen/source_gen.dart';
 
 const _hiveFieldChecker = TypeChecker.typeNamed(HiveField);
 
-class HiveFieldInfo {
-  HiveFieldInfo(this.index, this.defaultValue);
+/// [_HiveFieldInfo] stores the annotation data for each Hive field
+class _HiveFieldInfo {
+  _HiveFieldInfo(this.index, this.defaultValue);
 
   final int index;
 
   final DartObject? defaultValue;
 }
 
-HiveFieldInfo? getHiveFieldAnn(Element? element) {
+_HiveFieldInfo? getHiveFieldAnnotation(Element? element) {
   if (element == null) return null;
 
   final obj = _hiveFieldChecker.firstAnnotationOfExact(element);
   if (obj == null) return null;
 
-  return HiveFieldInfo(
+  return _HiveFieldInfo(
     obj.getField('index')!.toIntValue()!,
     obj.getField('defaultValue'),
   );
 }
 
+// Find default (unnamed) constructor in Hive class
 ConstructorElement getConstructor(InterfaceElement cls) {
   final constr = cls.constructors.firstWhereOrNull((it) => it.name == 'new');
+
   if (constr == null) {
     throw 'Provide an unnamed constructor.';
   }
-  return constr;
-}
 
-void check(bool condition, Object error) {
-  if (!condition) {
-    // ignore: only_throw_errors
-    throw error;
-  }
+  return constr;
 }

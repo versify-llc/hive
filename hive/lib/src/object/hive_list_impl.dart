@@ -170,7 +170,8 @@ class HiveListImpl<E extends HiveObjectMixin>
     }
   }
 
-  /// Not part of public API
+  // Not part of public API
   @visibleForTesting
+  // ignore: avoid_setters_without_getters
   set debugHive(HiveInterface hive) => _hive = hive;
 }

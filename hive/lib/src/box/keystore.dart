@@ -90,28 +90,24 @@ class Keystore<E> {
 
   /// Not part of public API
   @pragma('vm:prefer-inline')
-  @pragma('dart2js:tryInline')
   bool containsKey(dynamic key) {
     return _store.get(key) != null;
   }
 
   /// Not part of public API
   @pragma('vm:prefer-inline')
-  @pragma('dart2js:tryInline')
   dynamic keyAt(int index) {
     return _store.getKeyAt(index);
   }
 
   /// Not part of public API
   @pragma('vm:prefer-inline')
-  @pragma('dart2js:tryInline')
   Frame? get(dynamic key) {
     return _store.get(key);
   }
 
   /// Not part of public API
   @pragma('vm:prefer-inline')
-  @pragma('dart2js:tryInline')
   Frame? getAt(int index) {
     return _store.getAt(index);
   }
