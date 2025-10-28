@@ -1,14 +1,14 @@
-# Hive
-
-[![GitHub](https://img.shields.io/github/license/hivedb/hive?color=%23007A88&labelColor=333940&logo=apache)](https://github.com/hivedb/hive/blob/master/LICENSE)
+# hive_lite
 
 Hive is a lightweight and blazing fast key-value database written in pure Dart.
-
-## Features
 
 - 🚀 Built for mobile and desktop
 - 🔒 Encryption built in
 - 🎈 **NO** native dependencies
+
+If you're looking for the features listed below, then see [hive_ce](https://pub.dev/packages/hive_ce).
+- Multi-isolate support
+- Web support
 
 ## Usage
 
@@ -38,24 +38,6 @@ class Person extends HiveObject {
   @HiveField(1)
   int age;
 }
-```
-
-Extending `HiveObject` is optional but it provides handy methods like `save()` and `delete()`.
-
-```dart
-var box = await Hive.openBox('myBox');
-
-var person = Person()
-  ..name = 'Dave'
-  ..age = 22;
-box.add(person);
-
-print(box.getAt(0)); // Dave - 22
-
-person.age = 30;
-person.save();
-
-print(box.getAt(0)) // Dave - 30
 ```
 
 ## Hive ❤️ Flutter

@@ -1,3 +1,6 @@
+### 1.2.0
+- Upgrade packages for dart 3.9
+
 ### 1.1.0
 - Add linter and fix warnings
 - Format
