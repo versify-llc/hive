@@ -7,10 +7,10 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        test-platform: [vm, chrome]
-        dart-channel: ["2.12.0", "2.13.0", "2.14.0"]
+        test-platform: [vm]
+        dart-channel: ["3.8.0"]
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v4
       - uses: dart-lang/setup-dart@v1
         with:
           sdk: ${{ matrix.dart-channel }}
@@ -25,19 +25,16 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        flutter-channel: [dev, beta, stable]
+        flutter-channel: [stable]
     steps:
-      - uses: actions/checkout@v1
-      - uses: actions/setup-java@v1
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
         with:
-          java-version: "12.x"
-      - uses: subosito/flutter-action@v1
+          distribution: 'temurin'
+          java-version: '17'
+      - uses: subosito/flutter-action@v2
         with:
           channel: ${{ matrix.flutter-channel }}
-      - name: Override dependency version
-        run: |
-          echo -e "\ndependency_overrides:\n  win32: 2.6.1" >> pubspec.yaml
-        working-directory: hive_flutter
       - name: Install dependencies
         run: flutter pub get
         working-directory: hive_flutter
@@ -49,9 +46,9 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        dart-channel: ["2.12.0", "2.13.0"]
+        dart-channel: ["3.8.0"]
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v4
       - uses: dart-lang/setup-dart@v1
         with:
           sdk: ${{ matrix.dart-channel }}
@@ -61,16 +58,3 @@ jobs:
       - name: Generate build_runner output
         run: pub run build_runner build --delete-conflicting-outputs
         working-directory: hive_generator/example
-
-  check-score:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        package: [hive, hive_generator, hive_flutter]
-    steps:
-      - uses: actions/checkout@v1
-      - uses: axel-op/dart-package-analyzer@v3
-        with:
-          githubToken: ${{ secrets.GITHUB_TOKEN }}
-          relativePath: ${{ matrix.package }}
-          minAnnotationLevel: warning

@@ -1,3 +1,6 @@
+### 1.3.0
+- Upgrade packages for flutter 3.38
+
 ### 1.2.0
 - Upgrade packages for flutter 3.35
 

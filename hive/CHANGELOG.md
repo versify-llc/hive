@@ -1,3 +1,6 @@
+### 1.3.0
+- Upgrade packages for dart 3.10
+
 ### 1.2.0
 - Upgrade packages for dart 3.9
 

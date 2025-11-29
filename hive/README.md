@@ -6,13 +6,15 @@ Hive is a lightweight and blazing fast key-value database written in pure Dart.
 - 🔒 Encryption built in
 - 🎈 **NO** native dependencies
 
+The original maintainer of Hive has abandoned the project, so this is a clone of Hive to keep it up to date. And it's *even more* lightweight!
+
 If you're looking for the features listed below, then see [hive_ce](https://pub.dev/packages/hive_ce).
 - Multi-isolate support
 - Web support
 
 ## Usage
 
-You can use Hive just like a map. It is not necessary to await `Futures`.
+You can use Hive just like a map. It is not necessary to await Futures.
 
 ```dart
 var box = Hive.box('myBox');
