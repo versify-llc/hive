@@ -54,7 +54,7 @@ jobs:
           sdk: ${{ matrix.dart-channel }}
       - name: Install dependencies
         run: dart pub get
-        working-directory: hive_generator/example
-      - name: Generate build_runner output
-        run: dart run build_runner build --delete-conflicting-outputs
-        working-directory: hive_generator/example
+        working-directory: hive_generator
+      - name: Run tests
+        run: dart test
+        working-directory: hive_generator
