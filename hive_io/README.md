@@ -6,7 +6,7 @@ Hive is a lightweight and blazing fast key-value database written in pure Dart.
 - 🔒 Encryption built in
 - 🎈 No native dependencies
 
-👉 The original maintainer of Hive has abandoned the project. This is a clone (minus web support) to keep packages up-to-date. I'm not planning to add any new features because my goal is to just keep Hive working as-is. Checkout [hive_ce](https://pub.dev/packages/hive_ce) if you're looking for any of these things:
+👉 The original Hive project is abandoned. Hive_IO is a clone (minus web support) to keep everything working with newer versions of Flutter and Dart. I'm not planning to add any new features. Checkout [hive_ce](https://pub.dev/packages/hive_ce) if you're looking for:
 
 - Multi-isolate support
 - Web support
@@ -14,87 +14,96 @@ Hive is a lightweight and blazing fast key-value database written in pure Dart.
 
 ## Getting started
 
-Follow this guide to setup Hive in your Flutter project.
+Follow this guide to get started with Hive in your Flutter app!
 
 ### Install dependencies
 
-Add these packages as dependencies in your `pubspec.yaml`:
+Add the `hive_io` packages to your `pubspec.yaml`
 
 ```yaml
-  hive:
-    git:
-      url: https://github.com/versify-llc/hive
-      path: hive
-  hive_flutter:
-    git:
-      url: https://github.com/versify-llc/hive
-      path: hive_flutter
+dependencies:
+  hive_io: ^3.0.0
+  hive_flutter: ^3.0.0
+
+dev_dependencies:
+  hive_generator_io: ^3.0.0
 ```
 
-Add `hive_generator` to your `dev_dependencies`:
+### Generate type adapters
 
-```yaml
-  hive_generator:
-    git:
-      url: https://github.com/versify-llc/hive
-      path: hive_generator
-```
+Hive supports primitives, lists, maps, and any Dart object you want. However, you will need to generate a type adapter before you can store objects. 
 
-### Generate Hive types
-
-Hive not only supports primitives, lists and maps but also any Dart object you like. You need to generate a type adapter before you can store objects.
+Here is an example:
 
 ```dart
 @HiveType(typeId: 0)
-class Person extends HiveObject {
+class Person {
 
   @HiveField(0)
-  String name;
+  int id;
 
   @HiveField(1)
-  int age;
+  String? name;
+
+  @HiveField(2, defaultValue: false)
+  bool isVIP;
+
+  Person({
+    required this.id, 
+    this.name, 
+    this.isVIP = false,
+  });
 }
 ```
 
-Run build_runner to generate types:
+Run `build_runner` to generate Hive types:
+
 ```bash
 dart run build_runner build --delete-conflicting-outputs
 ```
 
 ### Initialize Hive
 
-Initialize hive in your `main.dart` 
+Initialize hive in the `main` function of your app:
 
 ```dart
-await Hive.initFlutter(null);
-Hive.registerAdapter(PersonAdapter());
-final personBox = await Hive.openBox<Person>('person');
+Future<void> main() async {
+  ...
+
+  // Initialize Hive. This MUST be called first.
+  await Hive.initFlutter(null);
+
+  // Register all of your type adapters next.
+  Hive.registerAdapter(PersonAdapter());
+
+  // Box needs to be opened before you can interact with it.
+  await Hive.openBox<Person>('person');
+
+  ...
+
+  runApp(App());
+}
 ```
 
-### Interacting with Hive
+### Using boxes
 
-You can use Hive just like a map. It is not necessary to await Futures.
+You can use a Hive box just like a map. It is not necessary to await Futures.
 
 ```dart
-var box = Hive.box('person');
+final box = Hive.box<Person>('person');
 
-box.put('name', 'David');
+box.put('123', Person(id: '123', name: 'David'));
 
-var name = box.get('name');
-
-print('Name: $name');
+final person = box.get('123');
 ```
 
-### Listen to object updates
+### Listen to box changes
 
-Use `ValueListenableBuilder` to listen for data changes to a box and update your widgets.
-
-Boxes are cached and therefore fast enough to be used directly in the `build()` method of Flutter widgets.
-
+You can use `ValueListenableBuilder` to listen for changes to a box and then update your widgets.
 
 ```dart
 import 'package:hive_io/hive_io.dart';
-import 'package:hive_flutter_io/hive_flutter.dart';
+import 'package:hive_flutter_io/hive_flutter_io.dart';
 
 class SettingsPage extends StatelessWidget {
   @override

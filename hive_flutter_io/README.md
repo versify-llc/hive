@@ -1,3 +1,3 @@
-# hive_flutter
+# hive_flutter_io
 
-Fork of [hive_flutter](https://pub.dev/packages/hive_flutter) `v1.1.0`
+This is a fork of [hive_flutter](https://pub.dev/packages/hive_flutter) that has been updated to support the latest versions of Dart and Flutter!
