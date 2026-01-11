@@ -12,6 +12,12 @@ Hive is a lightweight and blazing fast key-value database written in pure Dart.
 - Web support
 - New feature development
 
+## See also
+
+[hive_flutter_io](https://pub.dev/packages/hive_flutter_io) - hive extensions and helpers for flutter
+
+[hive_generator_io](https://pub.dev/packages/hive_generator_io) - generates hive type adapters
+
 ## Getting started
 
 Follow this guide to get started with Hive in your Flutter app!

@@ -1,3 +1,7 @@
+### 3.0.2
+- Update README
+- Update LICENSE
+
 ### 3.0.1
 - Update README
 

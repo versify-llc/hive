@@ -1,6 +1,8 @@
 name: hive_flutter_io
 description: Fork of the original hive_flutter project. Updated to support latest versions of Dart and Flutter!
-version: 3.0.1
+version: 3.0.2
+homepage: https://github.com/versify-llc/hive_io
+repository: https://github.com/versify-llc/hive_io/tree/main/hive_flutter_io
 
 environment:
   sdk: "^3.8.0"
