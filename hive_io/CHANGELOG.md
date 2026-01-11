@@ -1,3 +1,6 @@
+### 3.0.1
+- Update README
+
 ### 3.0.0
 - Rename to `hive_io`
 

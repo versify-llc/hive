@@ -1,3 +1,3 @@
-# hive_generator
+# hive_generator_io
 
-Fork of [hive_generator](https://pub.dev/packages/hive_generator) `v2.0.1`
+This is a fork of [hive_generator](https://pub.dev/packages/hive_generator) that has been updated to support the latest versions of Dart and Flutter!
