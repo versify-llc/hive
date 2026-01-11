@@ -1,8 +1,6 @@
 name: hive_io
-description: Clone of the original hive project. Updated to support latest versions of Dart and Flutter!
-version: 3.0.0
-# todo: add homepage
-homepage:
+description: Fork of the original hive project. Updated to support latest versions of Dart and Flutter!
+version: 3.0.1
 
 environment:
   sdk: ^3.8.0
