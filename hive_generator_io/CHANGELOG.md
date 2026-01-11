@@ -1,0 +1,19 @@
+### 3.0.0
+- Rename project to `hive_generator_io`
+
+### 1.3.0
+- Upgrade packages for dart 3.10
+
+### 1.2.0
+- Upgrade packages for dart 3.9
+
+### 1.1.0
+- Add linter and fix warnings
+- Format
+- Organize files
+
+### 1.0.0
+- Fork hive_generator
+- Tests all pass
+- Upgrade packages to latest
+- Minimum dart version set to `3.8`

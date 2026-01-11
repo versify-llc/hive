@@ -1,0 +1,20 @@
+name: hive_io
+description: Clone of the original hive project. Updated to support latest versions of Dart and Flutter!
+version: 3.0.0
+# todo: add homepage
+homepage:
+
+environment:
+  sdk: ^3.8.0
+
+dependencies:
+  crypto: ^3.0.6
+  meta: ^1.16.0
+
+dev_dependencies:
+  build_runner: ^2.10.1
+  lint: ^2.8.0
+  mocktail: ^1.0.4
+  path: ^1.9.1
+  pointycastle: ^4.0.0
+  test: ^1.26.3
