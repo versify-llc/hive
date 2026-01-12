@@ -32,7 +32,7 @@ dependencies:
   hive_flutter: ^3.0.3
 
 dev_dependencies:
-  hive_generator_io: ^3.0.3
+  hive_generator_io: ^3.1.0
 ```
 
 ### Generate type adapters

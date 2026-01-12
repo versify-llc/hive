@@ -1,3 +1,7 @@
+### 3.1.0
+- Update `analyzer` to `9.0.0`
+- Update other packages to latest
+
 ### 3.0.3
 - Update LICENSE
 
